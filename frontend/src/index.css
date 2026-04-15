@@ -1,0 +1,24 @@
+@import "tailwindcss";
+
+@theme {
+  --color-brand-blue: #033F63;
+  --color-brand-teal: #077A77;
+  --color-brand-light: #FBFDFF;
+  
+  --font-sans: 'Inter', 'Roboto', 'Helvetica Neue', sans-serif;
+}
+
+html {
+  scroll-padding-top: 120px;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-sans);
+  background-color: var(--color-brand-light);
+  color: #1a202c;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Base utility overrides or global styles can go here */
