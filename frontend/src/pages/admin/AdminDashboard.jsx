@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import { Activity, Users, BookOpen, Building, CheckCircle, XCircle, LogOut, Edit, Trash2, AlertTriangle, ArrowLeft } from 'lucide-react';
+import { Activity, Users, BookOpen, Building, CheckCircle, XCircle, LogOut, Edit, Trash2, AlertTriangle, ArrowLeft, Bell } from 'lucide-react';
 import { useLanguage } from '../../context/LanguageContext';
 import { translations, deptMap } from '../../utils/translations';
 
@@ -315,7 +315,10 @@ const AdminDashboard = () => {
     setEditModal({ isOpen: true, endpoint, id, payload });
   };
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
+    try {
+      await axios.post('http://localhost:5000/api/auth/logout', {}, { headers: { Authorization: `Bearer ${token}` } });
+    } catch(e) {}
     sessionStorage.clear();
     localStorage.removeItem('adminToken'); // Ensure old storage is also clean
     navigate('/admin');
@@ -341,13 +344,13 @@ const AdminDashboard = () => {
             <div className="w-16 h-16 bg-red-50 rounded-full flex items-center justify-center mb-6 mx-auto">
               <AlertTriangle className="text-red-500 w-8 h-8" />
             </div>
-            <h3 className="text-2xl font-black text-gray-800 mb-2 text-center">{t.CONFIRM_DELETE}</h3>
-            <p className="text-gray-500 mb-8 text-center text-sm leading-relaxed font-medium">
+            <h3 className="text-2xl font-bold text-gray-800 mb-2 text-center">{t.CONFIRM_DELETE}</h3>
+            <p className="text-gray-800 mb-8 text-center text-sm leading-relaxed font-medium">
               Are you sure you want to permanently delete this record? This action cannot be undone and will remove all associated data.
             </p>
             <div className="flex flex-col gap-3">
-              <button onClick={executeDelete} className="w-full bg-red-600 text-white py-4 rounded-2xl font-black shadow-lg shadow-red-200 hover:bg-red-700 transition-all uppercase tracking-widest text-xs">{t.DELETE}</button>
-              <button onClick={() => setDeleteModal({isOpen:false})} className="w-full bg-gray-50 text-gray-500 py-3 rounded-2xl font-bold hover:bg-gray-100 transition-all text-xs">{t.CANCEL}</button>
+              <button onClick={executeDelete} className="w-full bg-red-600 text-white py-4 rounded-2xl font-bold shadow-lg shadow-red-200 hover:bg-red-700 transition-all uppercase tracking-widest text-xs">{t.DELETE}</button>
+              <button onClick={() => setDeleteModal({isOpen:false})} className="w-full bg-gray-50 text-gray-800 py-3 rounded-2xl font-bold hover:bg-gray-100 transition-all text-xs">{t.CANCEL}</button>
             </div>
           </div>
         </div>
@@ -355,7 +358,7 @@ const AdminDashboard = () => {
 
       {/* Edit Modal */}
       {editModal.isOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div className="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50">
           <div className="bg-white p-6 rounded-xl shadow-2xl max-w-md w-full">
             <h3 className="text-xl font-bold text-brand-blue mb-4">Edit Record</h3>
             <form onSubmit={executeEdit} className="space-y-3">
@@ -383,32 +386,32 @@ const AdminDashboard = () => {
       <div className="w-64 bg-brand-blue text-white shadow-xl flex flex-col h-screen sticky top-0 overflow-y-auto">
         <div className="p-6 border-b border-brand-teal border-opacity-30 shrink-0">
           <h2 className="text-xl font-bold flex items-center"><Activity className="mr-2" /> Admin Root</h2>
-          <p className="text-brand-light opacity-70 text-sm mt-1">Control Center</p>
+          <p className="text-brand-light opacity-90 text-sm mt-1">Control Center</p>
         </div>
         <nav className="flex-1 p-4 space-y-2">
           {(adminRole === 'SUPER_ADMIN' || adminRole === 'GLOBAL_ADMIN' || adminRole === 'ADMIN_CLINIC') && (
-            <button onClick={() => setActiveTab('clinical')} className={`w-full flex items-center px-4 py-3 rounded-lg transition-colors ${activeTab === 'clinical' ? 'bg-brand-teal shadow-lg' : 'hover:bg-white hover:bg-opacity-10'}`}>
+            <button onClick={() => setActiveTab('clinical')} className={`w-full flex items-center px-4 py-3 rounded-lg transition-colors ${activeTab === 'clinical' ? 'bg-brand-teal shadow-lg' : 'hover:bg-white hover:text-brand-blue'}`}>
               <Users className="mr-3 h-5 w-5" /> {t.CLINICAL_MGMT}
             </button>
           )}
           {(adminRole === 'SUPER_ADMIN' || adminRole === 'GLOBAL_ADMIN' || adminRole === 'ADMIN_ACADEMIC') && (
-            <button onClick={() => setActiveTab('academic')} className={`w-full flex items-center px-4 py-3 rounded-lg transition-colors ${activeTab === 'academic' ? 'bg-brand-teal shadow-lg' : 'hover:bg-white hover:bg-opacity-10'}`}>
+            <button onClick={() => setActiveTab('academic')} className={`w-full flex items-center px-4 py-3 rounded-lg transition-colors ${activeTab === 'academic' ? 'bg-brand-teal shadow-lg' : 'hover:bg-white hover:text-brand-blue'}`}>
               <BookOpen className="mr-3 h-5 w-5" /> {t.ACADEMIC_MGMT}
             </button>
           )}
           {(adminRole === 'SUPER_ADMIN' || adminRole === 'GLOBAL_ADMIN' || adminRole === 'ADMIN_COLLEGE') && (
-            <button onClick={() => setActiveTab('college')} className={`w-full flex items-center px-4 py-3 rounded-lg transition-colors ${activeTab === 'college' ? 'bg-brand-teal shadow-lg' : 'hover:bg-white hover:bg-opacity-10'}`}>
+            <button onClick={() => setActiveTab('college')} className={`w-full flex items-center px-4 py-3 rounded-lg transition-colors ${activeTab === 'college' ? 'bg-brand-teal shadow-lg' : 'hover:bg-white hover:text-brand-blue'}`}>
               <Building className="mr-3 h-5 w-5" /> {t.COLLEGE_MGMT}
             </button>
           )}
           {(adminRole === 'SUPER_ADMIN' || adminRole === 'GLOBAL_ADMIN' || adminRole === 'ADMIN_HOSTEL') && (
-            <button onClick={() => setActiveTab('hostel')} className={`w-full flex items-center px-4 py-3 rounded-lg transition-colors ${activeTab === 'hostel' ? 'bg-brand-teal shadow-lg' : 'hover:bg-white hover:bg-opacity-10'}`}>
+            <button onClick={() => setActiveTab('hostel')} className={`w-full flex items-center px-4 py-3 rounded-lg transition-colors ${activeTab === 'hostel' ? 'bg-brand-teal shadow-lg' : 'hover:bg-white hover:text-brand-blue'}`}>
               <CheckCircle className="mr-3 h-5 w-5" /> {t.HOSTEL_PORTAL}
             </button>
           )}
         </nav>
         <div className="p-4 border-t border-brand-teal border-opacity-30 shrink-0">
-          <button onClick={handleLogout} className="w-full flex items-center text-red-300 hover:text-red-100 px-4 py-2 opacity-90 transition-colors bg-opacity-20 bg-white rounded">
+          <button onClick={handleLogout} className="w-full flex items-center text-red-300 hover:text-red-100 px-4 py-2 opacity-90 transition-colors bg-white/20 rounded">
             <LogOut className="mr-2 h-4 w-4" /> {t.LOGOUT}
           </button>
         </div>
@@ -419,21 +422,51 @@ const AdminDashboard = () => {
         {/* Real-time Insights Bar */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-10">
            <div className="bg-white p-5 rounded-2xl shadow-sm border-l-4 border-brand-teal">
-              <div className="text-xs font-black text-gray-400 uppercase">{t.LIVE_APPOINTMENTS}</div>
-              <div className="text-2xl font-black text-brand-blue">{appointments.length}</div>
+              <div className="text-xs font-bold text-gray-800 uppercase">{t.LIVE_APPOINTMENTS}</div>
+              <div className="text-2xl font-bold text-brand-blue">{appointments.length}</div>
            </div>
            <div className="bg-white p-5 rounded-2xl shadow-sm border-l-4 border-brand-blue">
-              <div className="text-xs font-black text-gray-400 uppercase">{t.ACADEMIC_FACULTY}</div>
-              <div className="text-2xl font-black text-brand-blue">{faculty.length}</div>
+              <div className="text-xs font-bold text-gray-800 uppercase">{t.ACADEMIC_FACULTY}</div>
+              <div className="text-2xl font-bold text-brand-blue">{faculty.length}</div>
            </div>
            <div className="bg-white p-5 rounded-2xl shadow-sm border-l-4 border-indigo-500">
-              <div className="text-xs font-black text-gray-400 uppercase">{t.RESEARCH_PROJECTS}</div>
-              <div className="text-2xl font-black text-brand-blue">{research.length}</div>
+              <div className="text-xs font-bold text-gray-800 uppercase">{t.RESEARCH_PROJECTS}</div>
+              <div className="text-2xl font-bold text-brand-blue">{research.length}</div>
            </div>
            <div className="bg-white p-5 rounded-2xl shadow-sm border-l-4 border-amber-500">
-              <div className="text-xs font-black text-gray-400 uppercase">{t.ACTIVE_EVENTS}</div>
-              <div className="text-2xl font-black text-brand-blue">{events.length}</div>
+              <div className="text-xs font-bold text-gray-800 uppercase">{t.ACTIVE_EVENTS}</div>
+              <div className="text-2xl font-bold text-brand-blue">{events.length}</div>
            </div>
+        </div>
+
+        {/* Emergency Broadcast Panel */}
+        <div className="bg-brand-blue text-white p-6 rounded-3xl shadow-xl mb-10 flex flex-col md:flex-row items-center justify-between gap-6 border-b-8 border-brand-teal">
+          <div className="flex-1">
+            <h3 className="text-xl font-bold flex items-center"><Bell className="mr-3 animate-pulse" /> Emergency Broadcast</h3>
+            <p className="text-brand-light opacity-80 text-sm">Send a high-priority alert to all active patients currently using the portal.</p>
+          </div>
+          <div className="flex gap-2 w-full md:w-auto">
+            <input 
+              id="broadcastInput"
+              type="text" 
+              placeholder="Enter message..." 
+              className="bg-white/20 border border-white/30 rounded-xl px-4 py-2 text-sm w-full md:w-80 outline-none focus:bg-white/30"
+            />
+            <button 
+              onClick={async () => {
+                const msg = document.getElementById('broadcastInput').value;
+                if (!msg) return alert('Enter a message');
+                try {
+                  await axios.post('http://localhost:5000/api/notifications/broadcast', { title: 'Health Alert', message: msg }, { headers: { Authorization: `Bearer ${token}` }});
+                  alert('Broadcast sent!');
+                  document.getElementById('broadcastInput').value = '';
+                } catch(e) { alert('Failed: ' + e.message); }
+              }}
+              className="bg-white text-brand-blue px-6 py-2 rounded-xl font-bold text-sm hover:bg-brand-teal hover:text-white transition-all shadow-lg"
+            >
+              BROADCAST
+            </button>
+          </div>
         </div>
         
         {activeTab === 'clinical' && (
@@ -445,14 +478,14 @@ const AdminDashboard = () => {
                 </button>
                 <div>
                   <h1 className="text-3xl font-bold text-gray-800">Clinical Management</h1>
-                  <p className="text-gray-500">Manage online appointments queue and doctor availability.</p>
+                  <p className="text-gray-800">Manage online appointments queue and doctor availability.</p>
                 </div>
               </div>
               <div className="bg-brand-blue text-white px-6 py-3 rounded-xl shadow-lg flex items-center">
                 <Users className="mr-3" />
                 <div>
-                  <div className="text-xs uppercase font-bold opacity-70">Current Queue</div>
-                  <div className="text-lg font-black">{viewDept}</div>
+                  <div className="text-xs uppercase font-bold opacity-90">Current Queue</div>
+                  <div className="text-lg font-bold">{viewDept}</div>
                 </div>
               </div>
             </div>
@@ -462,7 +495,7 @@ const AdminDashboard = () => {
                 <button 
                   key={dept} 
                   onClick={() => setViewDept(dept)}
-                  className={`px-4 py-2 rounded-md text-sm font-bold transition-all ${viewDept === dept ? 'bg-white text-brand-blue shadow-sm' : 'text-gray-500 hover:bg-teal-600 hover:text-white'}`}
+                  className={`px-4 py-2 rounded-md text-sm font-bold transition-all ${viewDept === dept ? 'bg-white text-brand-blue shadow-sm' : 'text-gray-800 hover:bg-teal-600 hover:text-white'}`}
                 >
                   {language === 'KN' ? deptMap[dept] || dept : dept}
                 </button>
@@ -470,10 +503,10 @@ const AdminDashboard = () => {
             </div>
             
             <div className="flex items-center justify-between mb-8 bg-gray-100 p-1.5 rounded-xl w-max shadow-inner">
-               <button onClick={() => setClinicalSubTab('queue')} className={`flex items-center px-6 py-2 rounded-lg text-sm font-black transition-all ${clinicalSubTab === 'queue' ? 'bg-white text-brand-blue shadow-md' : 'text-gray-500 hover:bg-teal-600 hover:text-white'}`}>
+               <button onClick={() => setClinicalSubTab('queue')} className={`flex items-center px-6 py-2 rounded-lg text-sm font-bold transition-all ${clinicalSubTab === 'queue' ? 'bg-white text-brand-blue shadow-md' : 'text-gray-800 hover:bg-teal-600 hover:text-white'}`}>
                  <Users className="mr-2 h-4 w-4" /> {language === 'KN' ? "ಸರತಿ ಸಾಲು" : "Patient Queue"}
                </button>
-               <button onClick={() => setClinicalSubTab('staff')} className={`flex items-center px-6 py-2 rounded-lg text-sm font-black transition-all ${clinicalSubTab === 'staff' ? 'bg-white text-brand-blue shadow-md' : 'text-gray-500 hover:bg-teal-600 hover:text-white'}`}>
+               <button onClick={() => setClinicalSubTab('staff')} className={`flex items-center px-6 py-2 rounded-lg text-sm font-bold transition-all ${clinicalSubTab === 'staff' ? 'bg-white text-brand-blue shadow-md' : 'text-gray-800 hover:bg-teal-600 hover:text-white'}`}>
                  <Activity className="mr-2 h-4 w-4" /> {language === 'KN' ? "ಸಿಬ್ಬಂದಿ ನಿರ್ವಹಣೆ" : "Staff Management"}
                </button>
             </div>
@@ -486,19 +519,19 @@ const AdminDashboard = () => {
                   </div>
                   <div className="p-6">
                     <table className="w-full text-left">
-                      <thead className="bg-gray-50 text-gray-600">
+                      <thead className="bg-gray-50 text-gray-800">
                         <tr><th className="p-3">Doctor Name</th><th className="p-3">Specialty</th><th className="p-3">Live Status</th><th className="p-3">Actions</th></tr>
                       </thead>
                       <tbody>
                         {doctors.filter(d => d.specialty === viewDept).map(doc => (
                           <tr key={doc._id} className="border-b hover:bg-gray-50">
                             <td className="p-3 font-medium">{doc.name}</td>
-                            <td className="p-3 text-gray-600 font-bold text-xs uppercase">{doc.specialty}</td>
+                            <td className="p-3 text-gray-800 font-bold text-xs uppercase">{doc.specialty}</td>
                             <td className="p-3">
                               <select 
                                 value={doc.status} 
                                 onChange={(e) => updateDoctorStatus(doc._id, e.target.value)}
-                                className={`px-3 py-1.5 rounded-lg text-xs font-black border-2 transition-all outline-none ${doc.status === 'Available' ? 'bg-green-50 text-green-700 border-green-200 focus:border-green-400' : 'bg-gray-100 text-gray-500 border-gray-200 focus:border-gray-400'}`}
+                                className={`px-3 py-1.5 rounded-lg text-xs font-bold border-2 transition-all outline-none ${doc.status === 'Available' ? 'bg-green-50 text-green-700 border-green-200 focus:border-green-400' : 'bg-gray-100 text-gray-800 border-gray-200 focus:border-gray-400'}`}
                               >
                                 <option value="Available">🟢 Available</option>
                                 <option value="Off-Duty">💤 Off-Duty</option>
@@ -540,7 +573,7 @@ const AdminDashboard = () => {
                 <div className="bg-white rounded-xl shadow-sm border border-brand-teal overflow-hidden">
                   <div className="bg-brand-teal text-white px-6 py-4 flex items-center justify-between">
                     <h3 className="font-bold flex items-center">Control Panel: {viewDept}</h3>
-                    <button onClick={() => callNext(viewDept)} className="bg-white text-brand-teal px-6 py-2 rounded-full font-black text-xs hover:bg-gray-100 shadow-lg border-2 border-white transition-all transform hover:scale-105">FINISH & CALL NEXT</button>
+                    <button onClick={() => callNext(viewDept)} className="bg-white text-brand-teal px-6 py-2 rounded-full font-bold text-xs hover:bg-gray-100 shadow-lg border-2 border-white transition-all transform hover:scale-105">FINISH & CALL NEXT</button>
                   </div>
                 </div>
 
@@ -548,7 +581,7 @@ const AdminDashboard = () => {
               <div className="bg-gray-800 text-white px-6 py-4 flex items-center justify-between">
                 <h3 className="font-bold flex items-center">{language === 'KN' ? "ರೋಗಿಗಳ ನೇಮಕಾತಿ ಸಾಲು" : "Patient Appointments Queue"}</h3>
                 <div className="flex items-center space-x-3">
-                  <span className="text-xs font-bold text-gray-400">FILTER BY DATE:</span>
+                  <span className="text-xs font-bold text-gray-800">FILTER BY DATE:</span>
                   <input 
                     type="date" 
                     value={viewDate}
@@ -560,23 +593,26 @@ const AdminDashboard = () => {
               <div className="p-6 overflow-x-auto">
                 {appointments.length === 0 ? (
                   <div className="text-center py-10">
-                    <div className="text-gray-400 text-lg font-bold">No appointments scheduled for {new Date(viewDate).toLocaleDateString()}.</div>
-                    <p className="text-gray-500 text-sm mt-1">Select a different date or department to view other queues.</p>
+                    <div className="text-gray-800 text-lg font-bold">No appointments scheduled for {new Date(viewDate).toLocaleDateString()}.</div>
+                    <p className="text-gray-800 text-sm mt-1">Select a different date or department to view other queues.</p>
                   </div>
                 ) : (
                   <table className="w-full text-left">
-                  <thead className="bg-gray-50 text-gray-600">
+                  <thead className="bg-gray-50 text-gray-800">
                     <tr><th className="p-3">Token</th><th className="p-3">Patient</th><th className="p-3">Dept</th><th className="p-3">Doctor</th><th className="p-3">Status</th><th className="p-3">Actions</th></tr>
                   </thead>
                   <tbody>
                     {appointments.map(appt => (
                       <tr key={appt._id} className={`border-b hover:bg-gray-50 ${appt.status === 'In-Treatment' ? 'bg-brand-light font-semibold' : ''}`}>
-                        <td className="p-3 font-black text-brand-blue">#{appt.tokenNumber || '---'}</td>
+                        <td className="p-3 font-bold text-brand-blue">#{appt.tokenNumber || '---'}</td>
                         <td className="p-3">
-                          <div className="font-medium">{appt.patient?.name}</div>
-                          <div className="text-xs text-gray-500">{appt.patient?.phone}</div>
+                          <div className="font-medium flex items-center">
+                            {appt.patient?.name}
+                            {appt.hasPush && <Activity className="w-4 h-4 text-green-500 ml-2 shadow-[0_0_8px_rgba(34,197,94,0.6)] rounded-full animate-pulse" title="Notification Active" />}
+                          </div>
+                          <div className="text-xs text-gray-800">{appt.patient?.phone}</div>
                         </td>
-                        <td className="p-3 text-xs uppercase font-bold text-gray-400">{appt.department}</td>
+                        <td className="p-3 text-xs uppercase font-bold text-gray-800">{appt.department}</td>
                         <td className="p-3 text-sm font-semibold text-brand-blue">{appt.assignedDoctor?.name || 'Unassigned'}</td>
                         <td className="p-3">
                            <select value={appt.status} onChange={(e) => updateApptStatus(appt._id, e.target.value)} className={`border p-1 rounded font-semibold outline-none ${appt.status === 'Pending' ? 'text-blue-600' : appt.status === 'In-Treatment' ? 'text-yellow-600' : appt.status === 'Completed' ? 'text-green-600' : 'text-red-600'}`}>
@@ -604,12 +640,12 @@ const AdminDashboard = () => {
 
             {/* Hospital Events Calendar Manager */}
             <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 mt-8">
-              <h3 className="font-black text-brand-blue mb-4 flex justify-between items-center text-lg">Hospital Calendar of Events <span className="text-xs bg-brand-blue text-white px-2 py-1 rounded">{hospitalEvents.length}</span></h3>
+              <h3 className="font-bold text-brand-blue mb-4 flex justify-between items-center text-lg">Hospital Calendar of Events <span className="text-xs bg-brand-blue text-white px-2 py-1 rounded">{hospitalEvents.length}</span></h3>
               <div className="space-y-2 mb-6 max-h-48 overflow-y-auto pr-2">
                 {hospitalEvents.map(evt => (
                   <div key={evt._id} className="flex justify-between items-center p-3 bg-gray-50 rounded-xl hover:bg-white border hover:border-brand-blue transition-all group">
                     <div>
-                      <span className="text-[10px] font-black text-brand-blue block">{evt.date}</span>
+                      <span className="text-xs font-bold text-brand-blue block">{evt.date}</span>
                       <span className="text-sm font-bold text-gray-700 truncate">{evt.title}</span>
                     </div>
                     {canModify('clinical') && (
@@ -640,7 +676,7 @@ const AdminDashboard = () => {
                     <option value="CommunityProgram">Community Program</option>
                     <option value="HospitalEvent">Hospital Event</option>
                   </select>
-                  <button type="submit" className="w-full bg-brand-blue text-white py-3 rounded-xl font-black text-xs uppercase tracking-widest shadow-lg hover:bg-opacity-90 transition-all">Add Hospital Event</button>
+                  <button type="submit" className="w-full bg-brand-blue text-white py-3 rounded-xl font-bold text-xs uppercase tracking-widest shadow-lg hover:bg-opacity-90 transition-all">Add Hospital Event</button>
                 </form>
               )}
             </div>
@@ -658,7 +694,7 @@ const AdminDashboard = () => {
               </button>
               <div>
                 <h1 className="text-3xl font-bold text-gray-800">Academics</h1>
-                <p className="text-gray-500">Syllabus manager and clinical schedule adjustments.</p>
+                <p className="text-gray-800">Syllabus manager and clinical schedule adjustments.</p>
               </div>
             </div>
             
@@ -670,8 +706,8 @@ const AdminDashboard = () => {
                    {departments.map(dep => (
                      <div key={dep._id} className="border p-3 rounded flex justify-between items-start bg-gray-50">
                        <div>
-                         <h4 className="font-bold text-sm text-gray-800">{dep.name} <span className="font-normal text-xs text-gray-500 ml-1">({dep.facultyCount} Faculty)</span></h4>
-                         <p className="text-xs text-gray-500 mt-1">HOD: {dep.hod}</p>
+                         <h4 className="font-bold text-sm text-gray-800">{dep.name} <span className="font-normal text-xs text-gray-800 ml-1">({dep.facultyCount} Faculty)</span></h4>
+                         <p className="text-xs text-gray-800 mt-1">HOD: {dep.hod}</p>
                        </div>
                        <div className="flex shrink-0 ml-2">
                          {canModify('academic') && (
@@ -699,7 +735,7 @@ const AdminDashboard = () => {
               <div className="bg-white rounded-xl shadow-sm border-t-4 border-brand-blue p-6 mt-6">
                 <div className="flex justify-between items-center mb-6">
                   <h3 className="font-bold text-brand-blue text-xl">Departmental Admission Slots</h3>
-                  <span className="bg-brand-blue text-white text-xs px-3 py-1 rounded-full font-black uppercase tracking-wider">{admissions.length} Slots Defined</span>
+                  <span className="bg-brand-blue text-white text-xs px-3 py-1 rounded-full font-bold uppercase tracking-wider">{admissions.length} Slots Defined</span>
                 </div>
                 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-8 max-h-100 overflow-y-auto pr-2">
@@ -713,26 +749,26 @@ const AdminDashboard = () => {
                            </>
                          )}
                       </div>
-                      <div className="text-xs font-black text-brand-teal uppercase mb-1">{adm.degree}</div>
-                      <h4 className="font-black text-gray-800 text-lg mb-2">{adm.department}</h4>
+                      <div className="text-xs font-bold text-brand-teal uppercase mb-1">{adm.degree}</div>
+                      <h4 className="font-bold text-gray-800 text-lg mb-2">{adm.department}</h4>
                       <div className="grid grid-cols-2 gap-2 mb-3">
                         <div className="bg-white p-2 rounded-lg border text-center">
-                          <div className="text-[10px] text-gray-400 font-bold uppercase">Total</div>
-                          <div className="font-black text-brand-blue">{adm.totalSeats}</div>
+                          <div className="text-xs text-gray-800 font-bold uppercase">Total</div>
+                          <div className="font-bold text-brand-blue">{adm.totalSeats}</div>
                         </div>
                         <div className="bg-white p-2 rounded-lg border text-center">
-                          <div className="text-[10px] text-gray-400 font-bold uppercase">Left</div>
-                          <div className="font-black text-red-500">{adm.availableSeats}</div>
+                          <div className="text-xs text-gray-800 font-bold uppercase">Left</div>
+                          <div className="font-bold text-red-500">{adm.availableSeats}</div>
                         </div>
                       </div>
-                      <div className="text-[10px] font-bold text-gray-400 uppercase">Fees Breakdown</div>
-                      <div className="text-xs text-gray-600">T: ₹{adm.feeStructure?.tuition?.toLocaleString()} | H: ₹{adm.feeStructure?.hostel?.toLocaleString()}</div>
+                      <div className="text-xs font-bold text-gray-800 uppercase">Fees Breakdown</div>
+                      <div className="text-xs text-gray-800">T: ₹{adm.feeStructure?.tuition?.toLocaleString()} | H: ₹{adm.feeStructure?.hostel?.toLocaleString()}</div>
                     </div>
                   ))}
                 </div>
 
                 <div className="bg-brand-light p-8 rounded-3xl border border-blue-50 shadow-inner">
-                  <h4 className="font-black text-brand-blue mb-6 text-xl">Define New Admission Slot</h4>
+                  <h4 className="font-bold text-brand-blue mb-6 text-xl">Define New Admission Slot</h4>
                   <form onSubmit={(e) => { 
                     e.preventDefault(); 
                     const payload = {
@@ -751,7 +787,7 @@ const AdminDashboard = () => {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       <div className="space-y-4">
                         <div>
-                          <label className="block text-xs font-black text-brand-blue uppercase mb-2">Program Department</label>
+                          <label className="block text-xs font-bold text-brand-blue uppercase mb-2">Program Department</label>
                           <select value={admForm.department} onChange={e=>setAdmForm({...admForm, department: e.target.value})} className="w-full border-2 border-white p-3 rounded-2xl shadow-sm outline-none bg-white font-bold focus:border-brand-teal transition-all" required>
                             <option value="">-- Select Dept --</option>
                             {['Oral Surgery', 'Orthodontics', 'Prosthodontics', 'Periodontics', 'Conservative Dentistry', 'Oral Pathology', 'Public Health Dentistry', 'Pedodontics', 'Oral Medicine'].map(d => (
@@ -760,7 +796,7 @@ const AdminDashboard = () => {
                           </select>
                         </div>
                         <div>
-                          <label className="block text-xs font-black text-brand-blue uppercase mb-2">Degree Type</label>
+                          <label className="block text-xs font-bold text-brand-blue uppercase mb-2">Degree Type</label>
                           <select value={admForm.degree} onChange={e=>setAdmForm({...admForm, degree: e.target.value})} className="w-full border-2 border-white p-3 rounded-2xl shadow-sm outline-none bg-white font-bold focus:border-brand-teal transition-all" required>
                             <option value="BDS">BDS Program</option>
                             <option value="MDS">MDS Program</option>
@@ -768,11 +804,11 @@ const AdminDashboard = () => {
                         </div>
                         <div className="grid grid-cols-2 gap-4">
                           <div>
-                            <label className="block text-xs font-black text-brand-blue uppercase mb-2">Total Seats</label>
+                            <label className="block text-xs font-bold text-brand-blue uppercase mb-2">Total Seats</label>
                             <input type="number" value={admForm.totalSeats} onChange={e=>setAdmForm({...admForm, totalSeats: e.target.value})} className="w-full border-2 border-white p-3 rounded-2xl shadow-sm" required />
                           </div>
                           <div>
-                            <label className="block text-xs font-black text-brand-blue uppercase mb-2">Available</label>
+                            <label className="block text-xs font-bold text-brand-blue uppercase mb-2">Available</label>
                             <input type="number" value={admForm.availableSeats} onChange={e=>setAdmForm({...admForm, availableSeats: e.target.value})} className="w-full border-2 border-white p-3 rounded-2xl shadow-sm" required />
                           </div>
                         </div>
@@ -780,19 +816,19 @@ const AdminDashboard = () => {
                       <div className="space-y-4">
                         <div className="grid grid-cols-2 gap-4">
                           <div>
-                            <label className="block text-xs font-black text-brand-blue uppercase mb-2">Tuition Fee</label>
+                            <label className="block text-xs font-bold text-brand-blue uppercase mb-2">Tuition Fee</label>
                             <input type="number" value={admForm.tuition} onChange={e=>setAdmForm({...admForm, tuition: e.target.value})} className="w-full border-2 border-white p-3 rounded-2xl shadow-sm" required />
                           </div>
                           <div>
-                            <label className="block text-xs font-black text-brand-blue uppercase mb-2">Hostel Fee</label>
+                            <label className="block text-xs font-bold text-brand-blue uppercase mb-2">Hostel Fee</label>
                             <input type="number" value={admForm.hostel} onChange={e=>setAdmForm({...admForm, hostel: e.target.value})} className="w-full border-2 border-white p-3 rounded-2xl shadow-sm" required />
                           </div>
                         </div>
                         <div>
-                          <label className="block text-xs font-black text-brand-blue uppercase mb-2">Eligibility (one per line)</label>
+                          <label className="block text-xs font-bold text-brand-blue uppercase mb-2">Eligibility (one per line)</label>
                           <textarea value={admForm.eligibility} onChange={e=>setAdmForm({...admForm, eligibility: e.target.value})} className="w-full border-2 border-white p-3 rounded-2xl shadow-sm min-h-30" required></textarea>
                         </div>
-                        <button type="submit" className="w-full bg-brand-blue text-white py-4 rounded-2xl font-black shadow-xl hover:bg-brand-teal transform hover:scale-[1.02] transition-all mt-2 uppercase tracking-widest text-sm">Initiate Admission Slot</button>
+                        <button type="submit" className="w-full bg-brand-blue text-white py-4 rounded-2xl font-bold shadow-xl hover:bg-brand-teal transform hover:scale-[1.02] transition-all mt-2 uppercase tracking-widest text-sm">Initiate Admission Slot</button>
                       </div>
                     </div>
                   </form>
@@ -810,18 +846,18 @@ const AdminDashboard = () => {
               </button>
               <div>
                 <h1 className="text-3xl font-bold text-gray-800">College Section</h1>
-                <p className="text-gray-500">Manage admissions, research, events, curriculum, and all site editor publishing tools from one place.</p>
+                <p className="text-gray-800">Manage admissions, research, events, curriculum, and all site editor publishing tools from one place.</p>
               </div>
             </div>
             
             <div className="grid grid-cols-1 gap-8">
               {/* Infrastructure Management (Research & Events) */}
               <div className="bg-white rounded-3xl shadow-sm border border-gray-100 p-8 pt-6">
-                <h2 className="text-2xl font-black text-brand-blue mb-8 border-b pb-4">Infrastructure Management</h2>
+                <h2 className="text-2xl font-bold text-brand-blue mb-8 border-b pb-4">Infrastructure Management</h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                   {/* Research Section */}
                   <div className="bg-white p-6 rounded-2xl border-2 border-brand-teal border-opacity-10">
-                    <h3 className="font-black text-brand-teal mb-4 flex justify-between items-center text-lg">Research Index <span className="text-xs bg-brand-teal text-white px-2 py-1 rounded">{research.length}</span></h3>
+                    <h3 className="font-bold text-brand-teal mb-4 flex justify-between items-center text-lg">Research Index <span className="text-xs bg-brand-teal text-white px-2 py-1 rounded">{research.length}</span></h3>
                     <div className="space-y-2 mb-6 max-h-48 overflow-y-auto pr-2">
                       {research.map(rsh => (
                         <div key={rsh._id} className="flex justify-between items-center p-3 bg-gray-50 rounded-xl hover:bg-white border hover:border-brand-teal transition-all group">
@@ -841,18 +877,18 @@ const AdminDashboard = () => {
                       <input type="text" placeholder="Authors" value={resForm.authors} onChange={e=>setResForm({...resForm, authors: e.target.value})} className="w-full border p-3 rounded-xl text-sm focus:border-brand-teal outline-none" required />
                       <textarea placeholder="Description" value={resForm.description} onChange={e=>setResForm({...resForm, description: e.target.value})} className="w-full border p-3 rounded-xl text-sm focus:border-brand-teal outline-none" rows="3" required />
                       <input type="url" placeholder="Research Link (e.g., https://...)" value={resForm.link} onChange={e=>setResForm({...resForm, link: e.target.value})} className="w-full border p-3 rounded-xl text-sm focus:border-brand-teal outline-none" />
-                      <button type="submit" className="w-full bg-brand-teal text-white py-3 rounded-xl font-black text-xs uppercase tracking-widest shadow-lg hover:bg-opacity-90 transition-all">Index Publication</button>
+                      <button type="submit" className="w-full bg-brand-teal text-white py-3 rounded-xl font-bold text-xs uppercase tracking-widest shadow-lg hover:bg-opacity-90 transition-all">Index Publication</button>
                     </form>
                   </div>
 
                   {/* Events Section */}
                   <div className="bg-white p-6 rounded-2xl border-2 border-blue-100">
-                    <h3 className="font-black text-blue-500 mb-4 flex justify-between items-center text-lg">Calendar of Events <span className="text-xs bg-blue-500 text-white px-2 py-1 rounded">{events.length}</span></h3>
+                    <h3 className="font-bold text-blue-500 mb-4 flex justify-between items-center text-lg">Calendar of Events <span className="text-xs bg-blue-500 text-white px-2 py-1 rounded">{events.length}</span></h3>
                     <div className="space-y-2 mb-6 max-h-48 overflow-y-auto pr-2">
                       {events.map(evt => (
                         <div key={evt._id} className="flex justify-between items-center p-3 bg-gray-50 rounded-xl hover:bg-white border hover:border-blue-200 transition-all group">
                           <div>
-                            <span className="text-[10px] font-black text-blue-400 block">{evt.date}</span>
+                            <span className="text-xs font-bold text-blue-400 block">{evt.date}</span>
                             <span className="text-sm font-bold text-gray-700 truncate">{evt.title}</span>
                           </div>
                           <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
@@ -873,7 +909,7 @@ const AdminDashboard = () => {
                         <option value="Academic">Academic</option>
                         <option value="Cultural">Cultural</option>
                       </select>
-                      <button className="w-full bg-blue-500 text-white py-3 rounded-xl font-black text-xs uppercase tracking-widest shadow-lg">Publish Event</button>
+                      <button className="w-full bg-blue-500 text-white py-3 rounded-xl font-bold text-xs uppercase tracking-widest shadow-lg">Publish Event</button>
                     </form>
                   </div>
                 </div>
@@ -882,8 +918,8 @@ const AdminDashboard = () => {
               {/* Faculty Directory Manager (migrated from Site Editor) */}
               <div className="bg-white rounded-3xl shadow-sm border border-gray-100 p-8 pt-6">
                 <div className="flex justify-between items-center mb-8 border-b pb-4">
-                  <h2 className="text-2xl font-black text-brand-blue">Faculty Directory Manager</h2>
-                  <span className="bg-brand-teal text-white text-xs px-3 py-1 rounded-full font-black uppercase tracking-widest">{faculty.length} Profiles</span>
+                  <h2 className="text-2xl font-bold text-brand-blue">Faculty Directory Manager</h2>
+                  <span className="bg-brand-teal text-white text-xs px-3 py-1 rounded-full font-bold uppercase tracking-widest">{faculty.length} Profiles</span>
                 </div>
                 <div className="grid grid-cols-1 xl:grid-cols-2 gap-8">
                   <div className="space-y-3 max-h-96 overflow-y-auto pr-2">
@@ -898,8 +934,8 @@ const AdminDashboard = () => {
                             </div>
                           )}
                           <div>
-                            <div className="font-black text-brand-blue">{f.name}</div>
-                            <div className="text-[10px] font-bold text-indigo-500 uppercase">{f.designation} | {f.department}</div>
+                            <div className="font-bold text-brand-blue">{f.name}</div>
+                            <div className="text-xs font-bold text-indigo-500 uppercase">{f.designation} | {f.department}</div>
                           </div>
                         </div>
                         {canModify('college') && (
@@ -915,7 +951,7 @@ const AdminDashboard = () => {
                   {canModify('college') && (
                     <div className="bg-brand-blue p-8 rounded-3xl shadow-2xl text-white relative overflow-hidden">
                       <div className="absolute top-0 right-0 p-8 opacity-10 rotate-12"><Users className="w-32 h-32" /></div>
-                      <h3 className="text-xl font-black mb-6 relative z-10">Publish Faculty Profile</h3>
+                      <h3 className="text-xl font-bold mb-6 relative z-10">Publish Faculty Profile</h3>
                       <form onSubmit={(e) => { e.preventDefault(); submitContent('college/faculty', facForm, () => setFacForm({ name: '', designation: '', department: 'Oral Surgery', experience: '', specialization: '', image: '' })); }} className="space-y-4 relative z-10">
                         <div className="grid grid-cols-2 gap-4">
                           <input type="text" placeholder="Full Name" value={facForm.name} onChange={e=>setFacForm({...facForm, name: e.target.value})} className="border border-white/20 bg-white/10 p-3 rounded-xl outline-none" required />
@@ -929,16 +965,16 @@ const AdminDashboard = () => {
                         </div>
                         <input type="text" placeholder="Specialization" value={facForm.specialization} onChange={e=>setFacForm({...facForm, specialization: e.target.value})} className="w-full border border-white/20 bg-white/10 p-3 rounded-xl outline-none" required />
                         <div className="relative">
-                          <label className="block text-sm font-black mb-2 opacity-90">Faculty Photo</label>
+                          <label className="block text-sm font-bold mb-2 opacity-90">Faculty Photo</label>
                           <input type="file" accept="image/*" onChange={handleFacultyPhotoUpload} className="w-full border border-white/20 bg-white/10 p-3 rounded-xl outline-none text-white file:bg-brand-teal file:text-white file:border-0 file:px-3 file:py-1 file:rounded-lg file:cursor-pointer file:font-bold" />
                           {facForm.image && (
                             <div className="mt-3 flex items-center gap-3">
                               <img src={facForm.image} alt="Faculty Preview" className="w-16 h-16 rounded-xl object-cover border-2 border-white/30" />
-                              <span className="text-xs opacity-70">Preview</span>
+                              <span className="text-xs opacity-90">Preview</span>
                             </div>
                           )}
                         </div>
-                        <button type="submit" className="w-full bg-brand-teal text-white py-4 rounded-xl font-black shadow-lg hover:brightness-110 transition-all uppercase tracking-widest text-xs mt-2">Publish to College Site</button>
+                        <button type="submit" className="w-full bg-brand-teal text-white py-4 rounded-xl font-bold shadow-lg hover:brightness-110 transition-all uppercase tracking-widest text-xs mt-2">Publish to College Site</button>
                       </form>
                     </div>
                   )}
@@ -948,17 +984,17 @@ const AdminDashboard = () => {
               {/* Syllabus & Curriculum Tracker (Migrated from Academic) */}
               <div className="bg-white rounded-3xl shadow-sm border border-gray-100 p-8 pt-6">
                 <div className="flex justify-between items-center mb-8 border-b pb-4">
-                   <h2 className="text-2xl font-black text-brand-blue">Syllabus & Curriculum Tracker</h2>
-                   <span className="bg-brand-blue text-white text-xs px-3 py-1 rounded-full font-black uppercase tracking-widest">Active Curriculum</span>
+                   <h2 className="text-2xl font-bold text-brand-blue">Syllabus & Curriculum Tracker</h2>
+                   <span className="bg-brand-blue text-white text-xs px-3 py-1 rounded-full font-bold uppercase tracking-widest">Active Curriculum</span>
                 </div>
                 <div className="grid grid-cols-1 xl:grid-cols-2 gap-8">
                    <div className="space-y-4 max-h-100 overflow-y-auto pr-2">
                      {syllabus.map(item => (
                        <div key={item._id} className="bg-gray-50 p-6 rounded-2xl border-2 border-white shadow-sm flex justify-between items-start group hover:border-brand-blue transition-all">
                          <div>
-                            <span className="text-xs font-black text-brand-blue bg-white px-3 py-1 rounded-full border mb-2 inline-block uppercase">{item.year} Academic Year</span>
-                            <h4 className="font-black text-gray-800 mb-1">{item.description}</h4>
-                            <div className="text-[10px] font-bold text-brand-teal opacity-70">RGUHS / DCI COMPLIANT</div>
+                            <span className="text-xs font-bold text-brand-blue bg-white px-3 py-1 rounded-full border mb-2 inline-block uppercase">{item.year} Academic Year</span>
+                            <h4 className="font-bold text-gray-800 mb-1">{item.description}</h4>
+                            <div className="text-xs font-bold text-brand-teal opacity-90">RGUHS / DCI COMPLIANT</div>
                          </div>
                          <div className="flex gap-2">
                             {canModify('college') && (
@@ -973,23 +1009,23 @@ const AdminDashboard = () => {
                    </div>
                    <div className="bg-brand-blue p-8 rounded-3xl shadow-2xl text-white relative overflow-hidden">
                       <div className="absolute top-0 right-0 p-8 opacity-10 rotate-12"><BookOpen className="w-32 h-32" /></div>
-                      <h3 className="text-xl font-black mb-6 relative z-10">Upload New Curriculum</h3>
+                      <h3 className="text-xl font-bold mb-6 relative z-10">Upload New Curriculum</h3>
                       <form onSubmit={(e) => { e.preventDefault(); submitContent('academics/syllabus', sylForm, () => setSylForm({ year: '', description: '', fileLink: '' })); }} className="space-y-4 relative z-10">
                         <div className="grid grid-cols-2 gap-4">
                            <div>
-                              <label className="block text-[10px] font-black uppercase mb-1 opacity-70 tracking-widest">Target Year</label>
+                              <label className="block text-xs font-bold uppercase mb-1 opacity-90 tracking-widest">Target Year</label>
                               <input type="text" placeholder="e.g. 2026-27" value={sylForm.year} onChange={e=>setSylForm({...sylForm, year: e.target.value})} className="w-full bg-white/10 border border-white/20 p-3 rounded-xl text-white placeholder-white/50 outline-none focus:bg-white/20" required />
                            </div>
                            <div>
-                              <label className="block text-[10px] font-black uppercase mb-1 opacity-70 tracking-widest">Document Title</label>
+                              <label className="block text-xs font-bold uppercase mb-1 opacity-90 tracking-widest">Document Title</label>
                               <input type="text" placeholder="BDS Syllabus" value={sylForm.description} onChange={e=>setSylForm({...sylForm, description: e.target.value})} className="w-full bg-white/10 border border-white/20 p-3 rounded-xl text-white placeholder-white/50 outline-none focus:bg-white/20" required />
                            </div>
                         </div>
                         <div>
-                          <label className="block text-[10px] font-black uppercase mb-1 opacity-70 tracking-widest">External URL / Storage Link</label>
+                          <label className="block text-xs font-bold uppercase mb-1 opacity-90 tracking-widest">External URL / Storage Link</label>
                           <input type="text" placeholder="https://rguhs.ac.in/..." value={sylForm.fileLink} onChange={e=>setSylForm({...sylForm, fileLink: e.target.value})} className="w-full bg-white/10 border border-white/20 p-3 rounded-xl text-white placeholder-white/50 outline-none focus:bg-white/20" />
                         </div>
-                        <button type="submit" className="w-full bg-brand-teal text-white py-4 rounded-xl font-black shadow-lg hover:brightness-110 transition-all uppercase tracking-widest text-xs mt-4">Sync Curriculum to Portal</button>
+                        <button type="submit" className="w-full bg-brand-teal text-white py-4 rounded-xl font-bold shadow-lg hover:brightness-110 transition-all uppercase tracking-widest text-xs mt-4">Sync Curriculum to Portal</button>
                       </form>
                    </div>
                 </div>
@@ -1006,7 +1042,7 @@ const AdminDashboard = () => {
               </button>
               <div>
                 <h1 className="text-3xl font-bold text-gray-800">Hostel Portal Operations</h1>
-                <p className="text-gray-500">Manage student residential complaints and maintenance records.</p>
+                <p className="text-gray-800">Manage student residential complaints and maintenance records.</p>
               </div>
             </div>
             
@@ -1016,7 +1052,7 @@ const AdminDashboard = () => {
               </div>
               <div className="p-6 overflow-x-auto">
                 <table className="w-full text-left">
-                  <thead className="bg-gray-50 text-gray-600">
+                  <thead className="bg-gray-50 text-gray-800">
                     <tr><th className="p-3">Student Name</th><th className="p-3">Room</th><th className="p-3">Category</th><th className="p-3">Description</th><th className="p-3">Status</th><th className="p-3">Operations</th></tr>
                   </thead>
                   <tbody>
@@ -1056,3 +1092,5 @@ const AdminDashboard = () => {
 };
 
 export default AdminDashboard;
+
+

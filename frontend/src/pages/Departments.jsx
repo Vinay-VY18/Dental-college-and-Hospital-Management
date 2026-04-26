@@ -33,8 +33,8 @@ const Departments = () => {
     <div className="min-h-screen bg-brand-light">
       <div className="bg-brand-blue text-white py-16 px-4">
         <div className="max-w-7xl mx-auto">
-          <h1 className="text-4xl md:text-5xl font-black mb-4">{t.DEPARTMENTS}</h1>
-          <p className="text-brand-teal text-xl font-medium tracking-tight">Centers of clinical excellence and specialized dental training.</p>
+          <h1 className="text-4xl md:text-5xl font-bold mb-4">{t.DEPARTMENTS}</h1>
+          <p className="text-brand-teal text-xl font-medium tracking-normal">Centers of clinical excellence and specialized dental training.</p>
         </div>
       </div>
 
@@ -57,7 +57,7 @@ const Departments = () => {
                     className={`w-full text-left px-5 py-3 rounded-2xl text-sm font-bold transition-all ${
                       activeDept?._id === dept._id 
                       ? 'bg-brand-teal text-white shadow-xl translate-x-1' 
-                      : 'text-gray-500 hover:bg-teal-700 hover:text-white focus:ring-2 focus:ring-teal-500'
+                      : 'text-gray-800 hover:bg-teal-700 hover:text-white focus:ring-2 focus:ring-teal-500'
                     }`}
                   >
                     {language === 'KN' ? deptMap[dept.name] || dept.name : dept.name}
@@ -83,19 +83,19 @@ const Departments = () => {
                   </div>
                   <div className="relative z-10">
                     <div className="flex flex-wrap items-center gap-4 mb-4">
-                       <span className="bg-brand-teal text-white px-4 py-1 rounded-full text-[10px] font-black uppercase tracking-widest">Department</span>
-                       <h2 className="text-4xl font-black text-brand-blue">{language === 'KN' ? deptMap[activeDept.name] || activeDept.name : activeDept.name}</h2>
+                       <span className="bg-brand-teal text-white px-4 py-1 rounded-full text-xs font-bold uppercase tracking-widest">Department</span>
+                       <h2 className="text-4xl font-bold text-brand-blue">{language === 'KN' ? deptMap[activeDept.name] || activeDept.name : activeDept.name}</h2>
                     </div>
-                    <p className="text-gray-500 text-lg leading-relaxed mb-8 max-w-3xl">
+                    <p className="text-gray-800 text-lg leading-relaxed mb-8 max-w-3xl">
                       {activeDept.description}
                     </p>
                     <div className="flex flex-wrap gap-8 pt-8 border-t">
                       <div>
-                        <div className="text-xs text-brand-teal font-black uppercase mb-1">{t.HOD}</div>
+                        <div className="text-xs text-brand-teal font-bold uppercase mb-1">{t.HOD}</div>
                         <div className="text-lg font-bold text-gray-800">{activeDept.hod}</div>
                       </div>
                       <div>
-                        <div className="text-xs text-brand-teal font-black uppercase mb-1">{t.FACULTY_SIZE}</div>
+                        <div className="text-xs text-brand-teal font-bold uppercase mb-1">{t.FACULTY_SIZE}</div>
                         <div className="text-lg font-bold text-gray-800">{activeDept.facultyCount} Specialists</div>
                       </div>
                     </div>
@@ -104,7 +104,7 @@ const Departments = () => {
 
                 {/* Faculty Gallery */}
                 <div>
-                  <h3 className="text-2xl font-black text-brand-blue mb-8 flex items-center">
+                  <h3 className="text-2xl font-bold text-brand-blue mb-8 flex items-center">
                     <Users className="mr-3 text-brand-teal" /> Faculty Gallery
                   </h3>
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -118,10 +118,10 @@ const Departments = () => {
                            )}
                            <div className="absolute inset-0 bg-brand-blue/0 group-hover:bg-brand-blue/10 transition-colors"></div>
                         </div>
-                        <h4 className="text-lg font-black text-brand-blue">{f.name}</h4>
+                        <h4 className="text-lg font-bold text-brand-blue">{f.name}</h4>
                         <p className="text-xs font-bold text-brand-teal uppercase mb-4">{f.designation}</p>
                         <div className="mt-auto pt-4 border-t border-dashed">
-                           <div className="flex items-center text-xs text-gray-400 font-bold">
+                           <div className="flex items-center text-xs text-gray-800 font-bold">
                              <Award className="w-3 h-3 mr-2" /> {f.experience} Experience
                            </div>
                         </div>

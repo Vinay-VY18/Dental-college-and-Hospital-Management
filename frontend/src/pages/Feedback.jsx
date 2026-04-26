@@ -119,7 +119,7 @@ const Feedback = () => {
                   <button
                     type="submit"
                     disabled={isSubmitting}
-                    className="w-full bg-brand-teal text-white py-3 rounded-md font-semibold hover:bg-opacity-90 transition-all flex items-center justify-center disabled:opacity-70 disabled:cursor-not-allowed"
+                    className="w-full bg-brand-teal text-white py-3 rounded-md font-semibold hover:bg-opacity-90 transition-all flex items-center justify-center disabled:opacity-90 disabled:cursor-not-allowed"
                   >
                     {isSubmitting ? (
                       <span className="flex items-center">

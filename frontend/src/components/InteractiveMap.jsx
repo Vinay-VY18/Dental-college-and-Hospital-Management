@@ -135,7 +135,7 @@ const InteractiveMap = ({ title = 'Location', address = 'Rajarajeswari Dental Co
         <div className="p-6 bg-gradient-to-r from-brand-teal to-brand-blue text-white">
           <div className="flex items-center justify-between">
             <div>
-              <h3 className="text-2xl font-black flex items-center gap-2">
+              <h3 className="text-2xl font-bold flex items-center gap-2">
                 <MapPin className="w-6 h-6" /> {title}
               </h3>
               <p className="text-sm opacity-90 mt-1">{address}</p>
@@ -161,14 +161,14 @@ const InteractiveMap = ({ title = 'Location', address = 'Rajarajeswari Dental Co
                 <Navigation className="w-5 h-5" />
                 <span>Distance</span>
               </div>
-              <div className="text-3xl font-black text-brand-teal">{distance} km</div>
-              <p className="text-xs text-gray-600 mt-2">from your location</p>
+              <div className="text-3xl font-bold text-brand-teal">{distance} km</div>
+              <p className="text-xs text-gray-800 mt-2">from your location</p>
             </div>
           )}
 
           <div className="absolute bottom-6 left-6 bg-white rounded-lg shadow-2xl p-4 z-40 border-2 border-brand-blue text-sm max-w-xs">
             <p className="font-bold text-gray-800 mb-2">📍 Rajarajeswari Dental College</p>
-            <p className="text-gray-600 text-xs mb-3">Kumbalgodu, Bangalore 560074</p>
+            <p className="text-gray-800 text-xs mb-3">Kumbalgodu, Bangalore 560074</p>
             <a 
               href="https://maps.google.com/?q=12.9352,77.6245" 
               target="_blank" 
@@ -186,18 +186,18 @@ const InteractiveMap = ({ title = 'Location', address = 'Rajarajeswari Dental Co
               <div className="w-8 h-8 bg-brand-teal rounded-full flex items-center justify-center text-white text-sm">🏥</div>
               <div>
                 <p className="font-bold text-gray-800">College/Hospital</p>
-                <p className="text-xs text-gray-600">Kumbalgodu Campus</p>
+                <p className="text-xs text-gray-800">Kumbalgodu Campus</p>
               </div>
             </div>
             <div className="flex items-center gap-3">
               <div className="w-8 h-8 bg-indigo-600 rounded-full flex items-center justify-center text-white text-sm">📍</div>
               <div>
                 <p className="font-bold text-gray-800">Your Location</p>
-                <p className="text-xs text-gray-600">Real-time positioning</p>
+                <p className="text-xs text-gray-800">Real-time positioning</p>
               </div>
             </div>
           </div>
-          <p className="text-xs text-gray-500 mt-4">
+          <p className="text-xs text-gray-800 mt-4">
             ℹ️ Map uses OpenStreetMap data (free, no API key required). Enable location access for distance calculation.
           </p>
         </div>

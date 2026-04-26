@@ -12,35 +12,44 @@ const Navbar = () => {
 
   const t = translations[language];
 
-  const collegeRoutes = ['/college-home', '/college-about', '/admissions', '/departments', '/research', '/student', '/hostel'];
+  const collegeRoutes = ['/college-home', '/college-about', '/admissions', '/departments', '/research', '/student', '/hostel', '/student-auth', '/student-dashboard'];
   const isCollegeSection = collegeRoutes.some((route) => location.pathname === route || location.pathname.startsWith(`${route}/`));
   const hasPatientSession = Boolean(sessionStorage.getItem('patientToken'));
+  const hasStudentSession = Boolean(sessionStorage.getItem('studentToken'));
 
-  const navLinks = isCollegeSection
-    ? [
+  let navLinks = [];
+  if (isCollegeSection) {
+    if (hasStudentSession) {
+      navLinks = [
+        { label: t.STUDENT_DASHBOARD || 'Student Dashboard', to: '/student-dashboard' },
+        { label: t.FEEDBACK, to: '/feedback' }
+      ];
+    } else {
+      navLinks = [
         { label: t.HOME, to: '/college-home' },
         { label: t.ABOUT, to: '/college-about' },
         { label: t.ADMISSIONS, to: '/admissions' },
         { label: t.DEPARTMENTS, to: '/departments' },
         { label: t.RESEARCH, to: '/research' },
-        { label: t.STUDENT_SERVICES, to: '/student' },
-        { label: t.HOSTEL_PORTAL, to: '/hostel' },
         { label: t.FEEDBACK, to: '/feedback' }
-      ]
-    : [
-        { label: t.HOME, to: '/' },
-        { label: t.ABOUT, to: '/about' },
-        { label: t.PATIENT_SERVICES, to: '/patient-portal' },
-        ...(hasPatientSession ? [{ label: t.PATIENT_DASHBOARD, to: '/patient-dashboard' }] : []),
-        { label: t.LIVE_QUEUE, to: '/live-queue' },
-        { label: t.FEEDBACK, to: '/feedback' },
-        { label: t.CONTACT, to: '/contact' }
       ];
+    }
+  } else {
+    navLinks = [
+      { label: t.HOME, to: '/' },
+      { label: t.ABOUT, to: '/about' },
+      { label: t.PATIENT_SERVICES, to: '/patient-portal' },
+      ...(hasPatientSession ? [{ label: t.PATIENT_DASHBOARD, to: '/patient-dashboard' }] : []),
+      { label: t.LIVE_QUEUE, to: '/live-queue' },
+      { label: t.FEEDBACK, to: '/feedback' },
+      { label: t.CONTACT, to: '/contact' }
+    ];
+  }
 
   const topBarClass = isCollegeSection ? 'bg-brand-teal' : 'bg-brand-blue';
   const logoClass = isCollegeSection ? 'bg-brand-teal' : 'bg-brand-blue';
   const switchPath = isCollegeSection ? '/' : '/college-home';
-  const homePath = isCollegeSection ? '/college-home' : '/';
+  const homePath = (isCollegeSection && hasStudentSession) ? '/student-dashboard' : (isCollegeSection ? '/college-home' : '/');
   const switchLabel = isCollegeSection ? t.OPEN_HOSPITAL : t.OPEN_COLLEGE;
   const subTitle = isCollegeSection ? t.DENTAL_COLLEGE : t.DENTAL_HOSPITAL;
 
@@ -48,6 +57,12 @@ const Navbar = () => {
     sessionStorage.removeItem('patientToken');
     sessionStorage.removeItem('patientProfile');
     navigate('/hospital-auth');
+  };
+
+  const handleStudentLogout = () => {
+    sessionStorage.removeItem('studentToken');
+    sessionStorage.removeItem('studentProfile');
+    navigate('/student-auth');
   };
 
   const isActive = (to) => location.pathname === to;
@@ -60,31 +75,51 @@ const Navbar = () => {
           <div className="flex space-x-6 items-center">
             <span>📞 080-28437150</span>
             <span>✉️ info@rrdch.org</span>
-            <Link
-              to={switchPath}
-              className="bg-white/15 px-3 py-1 rounded text-[10px] font-black uppercase hover:bg-white hover:text-brand-blue transition-all"
-            >
-              {switchLabel}
-            </Link>
+            {(!isCollegeSection || !hasStudentSession) && (
+              <Link
+                to={switchPath}
+                className="bg-white/15 px-3 py-1 rounded text-xs font-bold uppercase hover:bg-white hover:text-brand-blue transition-all"
+              >
+                {switchLabel}
+              </Link>
+            )}
             <Link 
               to={sessionStorage.getItem('adminToken') ? "/admin/dashboard" : "/admin"} 
-              className="bg-brand-teal px-3 py-0.5 rounded text-[10px] font-black uppercase hover:bg-white hover:text-brand-blue transition-all"
+              className="bg-brand-teal px-3 py-0.5 rounded text-xs font-bold uppercase hover:bg-white hover:text-brand-blue transition-all"
             >
               {t.STAFF_LOGIN}
             </Link>
+            {isCollegeSection && (
+              hasStudentSession ? (
+                <button
+                  type="button"
+                  onClick={handleStudentLogout}
+                  className="bg-white/15 px-3 py-1 rounded text-xs font-bold uppercase hover:bg-white hover:text-brand-blue transition-all"
+                >
+                  {t.STUDENT_LOGOUT}
+                </button>
+              ) : (
+                <Link
+                  to="/student-auth"
+                  className="bg-white/15 px-3 py-1 rounded text-xs font-bold uppercase hover:bg-white hover:text-brand-blue transition-all"
+                >
+                  {t.STUDENT_LOGIN}
+                </Link>
+              )
+            )}
             {!isCollegeSection && (
               hasPatientSession ? (
                 <button
                   type="button"
                   onClick={handlePatientLogout}
-                  className="bg-white/15 px-3 py-1 rounded text-[10px] font-black uppercase hover:bg-white hover:text-brand-blue transition-all"
+                  className="bg-white/15 px-3 py-1 rounded text-xs font-bold uppercase hover:bg-white hover:text-brand-blue transition-all"
                 >
                   {t.PATIENT_LOGOUT}
                 </button>
               ) : (
                 <Link
                   to="/hospital-auth"
-                  className="bg-white/15 px-3 py-1 rounded text-[10px] font-black uppercase hover:bg-white hover:text-brand-blue transition-all"
+                  className="bg-white/15 px-3 py-1 rounded text-xs font-bold uppercase hover:bg-white hover:text-brand-blue transition-all"
                 >
                   {t.PATIENT_LOGIN}
                 </Link>
@@ -109,7 +144,7 @@ const Navbar = () => {
         <div className="flex justify-between items-center h-24">
           <div className="flex items-center gap-4">
             <Link to={homePath} className="flex items-center gap-3 hover:opacity-80 transition-opacity">
-              <div className="h-20 w-20 rounded-full flex items-center justify-center shadow-lg overflow-hidden bg-white border-3 border-brand-teal flex-shrink-0">
+              <div className="h-20 w-20 rounded-full flex items-center justify-center shadow-lg overflow-hidden bg-white border-3 border-brand-teal shrink-0">
                 <img 
                   src="/logo.png" 
                   alt="Rajarajeshwari Dental College Logo" 
@@ -121,7 +156,7 @@ const Navbar = () => {
                 />
               </div>
               <div className="flex flex-col justify-center">
-                <span className="font-bold text-2xl text-brand-blue leading-tight tracking-tight">Rajarajeshwari</span>
+                <span className="font-bold text-2xl text-brand-blue leading-tight tracking-normal">Rajarajeshwari</span>
                 <span className="text-sm font-semibold text-brand-teal leading-tight tracking-wide uppercase">{subTitle}</span>
               </div>
             </Link>
@@ -145,15 +180,17 @@ const Navbar = () => {
           </div>
 
           {/* Section CTA */}
-          <div className="hidden lg:flex items-center space-x-3 ml-4">
-            <Link
-              to={switchPath}
-              className="flex items-center px-4 py-2 border-2 border-brand-blue text-brand-blue bg-white rounded-md hover:bg-brand-blue hover:text-white transition-all font-semibold text-sm shadow-sm hover:shadow-md"
-            >
-              {isCollegeSection ? <User className="w-4 h-4 mr-2" /> : <GraduationCap className="w-4 h-4 mr-2" />}
-              {switchLabel}
-            </Link>
-          </div>
+          {(!isCollegeSection || !hasStudentSession) && (
+            <div className="hidden lg:flex items-center space-x-3 ml-4">
+              <Link
+                to={switchPath}
+                className="flex items-center px-4 py-2 border-2 border-brand-blue text-brand-blue bg-white rounded-md hover:bg-brand-blue hover:text-white transition-all font-semibold text-sm shadow-sm hover:shadow-md"
+              >
+                {isCollegeSection ? <User className="w-4 h-4 mr-2" /> : <GraduationCap className="w-4 h-4 mr-2" />}
+                {switchLabel}
+              </Link>
+            </div>
+          )}
 
           <div className="lg:hidden flex items-center mb-2">
              <button onClick={() => setIsMenuOpen(!isMenuOpen)} className="text-brand-blue hover:text-brand-teal p-2">
@@ -163,7 +200,7 @@ const Navbar = () => {
         </div>
       </div>
 
-      {/* Mobile Menu */}
+          {/* Mobile Menu */}
       <div className={`lg:hidden transition-all duration-300 ease-in-out ${isMenuOpen ? 'max-h-125 opacity-100' : 'max-h-0 opacity-0 overflow-hidden'}`}>
         <div className="bg-white border-t border-gray-100 shadow-inner px-4 pt-2 pb-6 space-y-1">
           {navLinks.map((item) => (
@@ -181,16 +218,18 @@ const Navbar = () => {
             </Link>
           ))}
           
-          <div className="pt-4 mt-2 border-t border-gray-100">
-            <Link
-              to={switchPath}
-              onClick={() => setIsMenuOpen(false)}
-              className="flex items-center px-3 py-3 bg-brand-teal text-white rounded-md font-medium justify-center shadow-sm"
-            >
-              {isCollegeSection ? <User className="w-5 h-5 mr-2" /> : <GraduationCap className="w-5 h-5 mr-2" />}
-              {switchLabel}
-            </Link>
-          </div>
+          {(!isCollegeSection || !hasStudentSession) && (
+            <div className="pt-4 mt-2 border-t border-gray-100">
+              <Link
+                to={switchPath}
+                onClick={() => setIsMenuOpen(false)}
+                className="flex items-center px-3 py-3 bg-brand-teal text-white rounded-md font-medium justify-center shadow-sm"
+              >
+                {isCollegeSection ? <User className="w-5 h-5 mr-2" /> : <GraduationCap className="w-5 h-5 mr-2" />}
+                {switchLabel}
+              </Link>
+            </div>
+          )}
         </div>
       </div>
     </nav>
@@ -198,3 +237,4 @@ const Navbar = () => {
 };
 
 export default Navbar;
+

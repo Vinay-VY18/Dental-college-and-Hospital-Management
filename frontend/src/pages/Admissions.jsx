@@ -152,7 +152,7 @@ const Admissions = () => {
       {/* Header */}
       <div className="bg-brand-blue text-white py-16 px-4">
         <div className="max-w-7xl mx-auto">
-          <h1 className="text-4xl md:text-5xl font-black mb-4">{t.ADMISSIONS} 2026-27</h1>
+          <h1 className="text-4xl md:text-5xl font-bold mb-4">{t.ADMISSIONS} 2026-27</h1>
           <p className="text-brand-teal text-xl font-medium">{t.ADMISSIONS_SUBTITLE}</p>
         </div>
       </div>
@@ -176,7 +176,7 @@ const Admissions = () => {
                     className={`w-full text-left px-4 py-3 rounded-xl text-sm font-bold transition-all ${
                       activeDept === dept 
                       ? 'bg-brand-teal text-white shadow-md' 
-                      : 'text-gray-600 hover:bg-teal-700 hover:text-white focus:ring-2 focus:ring-teal-500'
+                      : 'text-gray-800 hover:bg-teal-700 hover:text-white focus:ring-2 focus:ring-teal-500'
                     }`}
                   >
                     {language === 'KN' ? deptMap[dept] || dept : dept}
@@ -191,7 +191,7 @@ const Admissions = () => {
             {loading ? (
               <div className="bg-white rounded-3xl p-20 flex flex-col items-center justify-center shadow-sm border border-gray-100 animate-pulse">
                 <div className="w-16 h-16 border-4 border-brand-teal border-t-transparent rounded-full animate-spin mb-4"></div>
-                <p className="text-gray-400 font-bold">Fetching Live Seat Matrix...</p>
+                <p className="text-gray-800 font-bold">Fetching Live Seat Matrix...</p>
               </div>
             ) : deptAdmissions.length > 0 ? (
               <div className="space-y-8 animate-fadeIn">
@@ -200,13 +200,13 @@ const Admissions = () => {
                 <div className="bg-white rounded-3xl p-8 shadow-sm border border-gray-100 border-l-8 border-l-brand-teal">
                   <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                     <div>
-                      <h2 className="text-3xl font-black text-brand-blue mb-1">{language === 'KN' ? deptMap[activeDept] || activeDept : activeDept}</h2>
-                      <p className="text-gray-500 font-bold flex items-center bg-gray-50 px-3 py-1 rounded-full w-max text-sm">
+                      <h2 className="text-3xl font-bold text-brand-blue mb-1">{language === 'KN' ? deptMap[activeDept] || activeDept : activeDept}</h2>
+                      <p className="text-gray-800 font-bold flex items-center bg-gray-50 px-3 py-1 rounded-full w-max text-sm">
                         <Info className="mr-2 h-4 w-4 text-brand-teal" /> {deptAdmissions.map((row) => row.degree).join(' + ')} Program
                       </p>
                     </div>
                     <div className="bg-brand-teal bg-opacity-10 text-brand-teal px-6 py-3 rounded-2xl border border-brand-teal border-opacity-20">
-                      <span className="text-xs uppercase font-black block tracking-wider">{t.STATUS}</span>
+                      <span className="text-xs uppercase font-bold block tracking-wider">{t.STATUS}</span>
                       <span className="text-lg font-bold">{t.APPLICATION_STATUS}</span>
                     </div>
                   </div>
@@ -214,40 +214,40 @@ const Admissions = () => {
 
                 <div className="grid grid-cols-1 xl:grid-cols-2 gap-8">
                   <div className="bg-white rounded-3xl p-8 shadow-sm border border-gray-100">
-                    <h3 className="text-xl font-black text-gray-800 mb-6 flex items-center">
+                    <h3 className="text-xl font-bold text-gray-800 mb-6 flex items-center">
                       <Info className="mr-3 text-brand-teal" /> {t.ADMISSION_DEPT_PROFILE}
                     </h3>
                     <div className="space-y-4 text-sm text-gray-700">
                       <div className="p-4 bg-gray-50 rounded-2xl border border-gray-100">
-                        <p className="text-xs uppercase tracking-wide text-gray-500 font-bold mb-1">{t.ADMISSION_PROGRAM_DURATION}</p>
+                        <p className="text-xs uppercase tracking-wide text-gray-800 font-bold mb-1">{t.ADMISSION_PROGRAM_DURATION}</p>
                         <p className="font-semibold text-brand-blue">{selectedInsights.duration}</p>
                       </div>
                       <div className="p-4 bg-gray-50 rounded-2xl border border-gray-100">
-                        <p className="text-xs uppercase tracking-wide text-gray-500 font-bold mb-1">{t.HOD}</p>
+                        <p className="text-xs uppercase tracking-wide text-gray-800 font-bold mb-1">{t.HOD}</p>
                         <p className="font-semibold text-brand-blue">{selectedProfile?.hod || t.NOT_AVAILABLE}</p>
                       </div>
                       <div className="p-4 bg-gray-50 rounded-2xl border border-gray-100">
-                        <p className="text-xs uppercase tracking-wide text-gray-500 font-bold mb-1">{t.ADMISSION_FACULTY_STRENGTH}</p>
+                        <p className="text-xs uppercase tracking-wide text-gray-800 font-bold mb-1">{t.ADMISSION_FACULTY_STRENGTH}</p>
                         <p className="font-semibold text-brand-blue">{selectedProfile?.facultyCount ?? 0}</p>
                       </div>
                       <div className="p-4 bg-gray-50 rounded-2xl border border-gray-100">
-                        <p className="text-xs uppercase tracking-wide text-gray-500 font-bold mb-2">{t.ADMISSION_KEY_FOCUS}</p>
+                        <p className="text-xs uppercase tracking-wide text-gray-800 font-bold mb-2">{t.ADMISSION_KEY_FOCUS}</p>
                         <div className="flex flex-wrap gap-2">
                           {selectedInsights.focusAreas.length > 0 ? selectedInsights.focusAreas.map((item) => (
                             <span key={item} className="px-3 py-1 rounded-full bg-brand-light text-brand-blue border border-blue-100 text-xs font-semibold">
                               {item}
                             </span>
                           )) : (
-                            <span className="text-gray-500">{t.ADMISSION_DEPT_PROFILE_PENDING}</span>
+                            <span className="text-gray-800">{t.ADMISSION_DEPT_PROFILE_PENDING}</span>
                           )}
                         </div>
                       </div>
                       <div className="p-4 bg-gray-50 rounded-2xl border border-gray-100">
-                        <p className="text-xs uppercase tracking-wide text-gray-500 font-bold mb-1">{t.ADMISSION_CLINICAL_EXPOSURE}</p>
+                        <p className="text-xs uppercase tracking-wide text-gray-800 font-bold mb-1">{t.ADMISSION_CLINICAL_EXPOSURE}</p>
                         <p className="font-medium">{selectedInsights.clinicalExposure}</p>
                       </div>
                       <div className="p-4 bg-gray-50 rounded-2xl border border-gray-100">
-                        <p className="text-xs uppercase tracking-wide text-gray-500 font-bold mb-2">{t.ADMISSION_CAREER_PATHS}</p>
+                        <p className="text-xs uppercase tracking-wide text-gray-800 font-bold mb-2">{t.ADMISSION_CAREER_PATHS}</p>
                         <ul className="space-y-1 list-disc list-inside">
                           {selectedInsights.careerPathways.length > 0 ? selectedInsights.careerPathways.map((path) => (
                             <li key={path} className="font-medium">{path}</li>
@@ -258,7 +258,7 @@ const Admissions = () => {
                       </div>
                       {selectedProfile?.description && (
                         <div className="p-4 bg-gray-50 rounded-2xl border border-gray-100">
-                          <p className="text-xs uppercase tracking-wide text-gray-500 font-bold mb-1">{t.ADMISSION_DEPT_PROFILE}</p>
+                          <p className="text-xs uppercase tracking-wide text-gray-800 font-bold mb-1">{t.ADMISSION_DEPT_PROFILE}</p>
                           <p className="font-medium">{selectedProfile.description}</p>
                         </div>
                       )}
@@ -266,20 +266,20 @@ const Admissions = () => {
                   </div>
 
                   <div className="bg-white rounded-3xl p-8 shadow-sm border border-gray-100">
-                    <h3 className="text-xl font-black text-gray-800 mb-6 flex items-center">
+                    <h3 className="text-xl font-bold text-gray-800 mb-6 flex items-center">
                       <CheckCircle className="mr-3 text-brand-teal" /> {t.ADMISSION_TIMELINE}
                     </h3>
                     <div className="space-y-4">
                       <div className="p-4 bg-brand-light rounded-2xl border border-blue-100">
-                        <p className="text-xs uppercase tracking-wide text-gray-500 font-bold mb-1">{t.ADMISSION_WINDOW}</p>
+                        <p className="text-xs uppercase tracking-wide text-gray-800 font-bold mb-1">{t.ADMISSION_WINDOW}</p>
                         <p className="font-semibold text-brand-blue">{admissionTimeline.applicationWindow}</p>
                       </div>
                       <div className="p-4 bg-brand-light rounded-2xl border border-blue-100">
-                        <p className="text-xs uppercase tracking-wide text-gray-500 font-bold mb-1">{t.ADMISSION_COUNSELLING}</p>
+                        <p className="text-xs uppercase tracking-wide text-gray-800 font-bold mb-1">{t.ADMISSION_COUNSELLING}</p>
                         <p className="font-semibold text-brand-blue">{admissionTimeline.counsellingRounds}</p>
                       </div>
                       <div className="p-4 bg-brand-light rounded-2xl border border-blue-100">
-                        <p className="text-xs uppercase tracking-wide text-gray-500 font-bold mb-1">{t.ADMISSION_COMMENCEMENT}</p>
+                        <p className="text-xs uppercase tracking-wide text-gray-800 font-bold mb-1">{t.ADMISSION_COMMENCEMENT}</p>
                         <p className="font-semibold text-brand-blue">{admissionTimeline.courseCommences}</p>
                       </div>
                       <div className="p-4 rounded-2xl border border-amber-200 bg-amber-50 text-amber-800 text-sm font-medium">
@@ -295,7 +295,7 @@ const Admissions = () => {
                     return (
                       <div key={program._id || `${activeDept}-${program.degree}`} className="bg-white rounded-3xl p-8 shadow-sm border border-gray-100">
                         <div className="flex items-center justify-between mb-6">
-                          <h3 className="text-2xl font-black text-brand-blue">{program.degree} Program</h3>
+                          <h3 className="text-2xl font-bold text-brand-blue">{program.degree} Program</h3>
                           <span className="px-3 py-1 rounded-full bg-brand-light text-brand-blue text-xs font-bold uppercase tracking-wide">
                             {t.APPLICATION_STATUS}
                           </span>
@@ -303,13 +303,13 @@ const Admissions = () => {
 
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-6">
                           <div>
-                            <h4 className="text-lg font-black text-gray-800 mb-4 flex items-center">
+                            <h4 className="text-lg font-bold text-gray-800 mb-4 flex items-center">
                               <MapPin className="mr-2 text-brand-teal" /> {t.SEAT_MATRIX}
                             </h4>
                             <div className="space-y-3">
                               <div className="flex justify-between items-end mb-1">
-                                <span className="text-gray-500 font-bold text-sm">Availability</span>
-                                <span className="text-brand-blue font-black text-2xl">{program.availableSeats}<span className="text-gray-300 text-sm font-normal ml-1">/ {program.totalSeats}</span></span>
+                                <span className="text-gray-800 font-bold text-sm">Availability</span>
+                                <span className="text-brand-blue font-bold text-2xl">{program.availableSeats}<span className="text-gray-300 text-sm font-normal ml-1">/ {program.totalSeats}</span></span>
                               </div>
                               <div className="w-full bg-gray-100 h-4 rounded-full overflow-hidden">
                                 <div
@@ -321,24 +321,24 @@ const Admissions = () => {
                           </div>
 
                           <div>
-                            <h4 className="text-lg font-black text-gray-800 mb-4 flex items-center">
+                            <h4 className="text-lg font-bold text-gray-800 mb-4 flex items-center">
                               <DollarSign className="mr-2 text-brand-teal" /> {t.FEE_STRUCTURE}
                             </h4>
                             <div className="space-y-3">
                               <div className="flex justify-between p-4 bg-gray-50 rounded-2xl border border-gray-100">
-                                <span className="text-gray-600 font-bold">{t.TUITION_FEE}</span>
-                                <span className="text-brand-blue font-black">₹{program.feeStructure?.tuition?.toLocaleString?.() ?? program.feeStructure?.tuition ?? '--'}</span>
+                                <span className="text-gray-800 font-bold">{t.TUITION_FEE}</span>
+                                <span className="text-brand-blue font-bold">₹{program.feeStructure?.tuition?.toLocaleString?.() ?? program.feeStructure?.tuition ?? '--'}</span>
                               </div>
                               <div className="flex justify-between p-4 bg-gray-50 rounded-2xl border border-gray-100">
-                                <span className="text-gray-600 font-bold">{t.HOSTEL_MESS}</span>
-                                <span className="text-brand-blue font-black">₹{program.feeStructure?.hostel?.toLocaleString?.() ?? program.feeStructure?.hostel ?? '--'}</span>
+                                <span className="text-gray-800 font-bold">{t.HOSTEL_MESS}</span>
+                                <span className="text-brand-blue font-bold">₹{program.feeStructure?.hostel?.toLocaleString?.() ?? program.feeStructure?.hostel ?? '--'}</span>
                               </div>
                             </div>
                           </div>
                         </div>
 
                         <div>
-                          <h4 className="text-lg font-black text-gray-800 mb-4 flex items-center">
+                          <h4 className="text-lg font-bold text-gray-800 mb-4 flex items-center">
                             <CheckCircle className="mr-2 text-brand-teal" /> {t.ELIGIBILITY}
                           </h4>
                           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -362,8 +362,8 @@ const Admissions = () => {
                 <div className="bg-gray-50 p-6 rounded-full mb-6">
                   <Info className="h-12 w-12 text-gray-300" />
                 </div>
-                <h2 className="text-2xl font-black text-brand-blue mb-2">Notice</h2>
-                <p className="text-gray-500 max-w-md mx-auto mb-8">
+                <h2 className="text-2xl font-bold text-brand-blue mb-2">Notice</h2>
+                <p className="text-gray-800 max-w-md mx-auto mb-8">
                   {error || "Admission details for this department are being finalized. Please check back later or contact the helpdesk."}
                 </p>
                 <button className="bg-brand-blue text-white px-8 py-3 rounded-2xl font-bold shadow-lg hover:bg-opacity-90 transition-all">

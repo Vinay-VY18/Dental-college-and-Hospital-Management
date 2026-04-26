@@ -102,15 +102,15 @@ const Home = () => {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
             <div className="p-8 bg-white rounded-xl shadow-sm border border-gray-100">
               <div className="text-4xl font-bold text-brand-teal mb-2">25+</div>
-              <div className="text-gray-600 font-medium">{t.YEARS_OF_CLINICAL_SERVICE}</div>
+              <div className="text-gray-800 font-medium">{t.YEARS_OF_CLINICAL_SERVICE}</div>
             </div>
             <div className="p-8 bg-white rounded-xl shadow-sm border border-gray-100">
               <div className="text-4xl font-bold text-brand-teal mb-2">15k+</div>
-              <div className="text-gray-600 font-medium">{t.PATIENTS_TREATED}</div>
+              <div className="text-gray-800 font-medium">{t.PATIENTS_TREATED}</div>
             </div>
             <div className="p-8 bg-white rounded-xl shadow-sm border border-gray-100">
               <div className="text-4xl font-bold text-brand-teal mb-2">9</div>
-              <div className="text-gray-600 font-medium">{t.HOSPITAL_SPECIALTIES}</div>
+              <div className="text-gray-800 font-medium">{t.HOSPITAL_SPECIALTIES}</div>
             </div>
           </div>
         </div>
@@ -121,7 +121,7 @@ const Home = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-10">
             <h2 className="text-3xl font-bold text-brand-blue mb-4">{t.HOSPITAL_TOP_DOCTORS_TITLE}</h2>
-            <p className="text-gray-600 max-w-3xl mx-auto text-lg">
+            <p className="text-gray-800 max-w-3xl mx-auto text-lg">
               {t.HOSPITAL_TOP_DOCTORS_SUB}
             </p>
           </div>
@@ -137,7 +137,7 @@ const Home = () => {
                 <div className="p-6">
                   <h3 className="text-xl font-bold text-brand-blue">{doctor.name}</h3>
                   <p className="text-brand-teal font-semibold mt-2">{doctor.specialization}</p>
-                  <p className="text-sm text-gray-600 mt-3">
+                  <p className="text-sm text-gray-800 mt-3">
                     {t.DEPARTMENT}: <span className="font-medium text-gray-800">{doctor.department}</span>
                   </p>
                 </div>
@@ -147,7 +147,7 @@ const Home = () => {
 
           <div>
             <h3 className="text-2xl font-bold text-brand-blue mb-3 text-center">{t.HOSPITAL_DEPARTMENT_INFO_TITLE}</h3>
-            <p className="text-gray-600 max-w-3xl mx-auto text-center mb-8">{t.HOSPITAL_DEPARTMENT_INFO_SUB}</p>
+            <p className="text-gray-800 max-w-3xl mx-auto text-center mb-8">{t.HOSPITAL_DEPARTMENT_INFO_SUB}</p>
 
             <style>{`
               @keyframes scroll-left {
@@ -177,7 +177,7 @@ const Home = () => {
                         </div>
                       </div>
                       <h4 className="text-lg font-bold text-brand-blue mb-3 text-center">{dept.name}</h4>
-                      <p className="text-gray-600 leading-relaxed text-sm">{dept.info}</p>
+                      <p className="text-gray-800 leading-relaxed text-sm">{dept.info}</p>
                     </div>
                   </div>
                 ))}
@@ -192,7 +192,7 @@ const Home = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-10">
             <h2 className="text-3xl font-bold text-brand-blue mb-4">{t.HOSPITAL_VIRTUAL_TOUR_TITLE}</h2>
-            <p className="text-gray-600 max-w-2xl mx-auto text-lg">{t.HOSPITAL_VIRTUAL_TOUR_DESCRIPTION}</p>
+            <p className="text-gray-800 max-w-2xl mx-auto text-lg">{t.HOSPITAL_VIRTUAL_TOUR_DESCRIPTION}</p>
           </div>
           <div 
             onClick={() => setIsVideoOpen(true)}
@@ -201,7 +201,7 @@ const Home = () => {
             <img 
               src="https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?auto=format&fit=crop&q=80&w=1200&h=675" 
               alt="Hospital Campus" 
-              className="absolute inset-0 w-full h-full object-cover opacity-60 group-hover:opacity-40 transition-opacity duration-300"
+              className="absolute inset-0 w-full h-full object-cover opacity-85 group-hover:opacity-70 transition-opacity duration-300"
             />
             <div className="relative z-10 flex flex-col items-center gap-4">
               <div className="h-20 w-20 bg-brand-teal rounded-full flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300">
@@ -216,17 +216,17 @@ const Home = () => {
             <div className="text-center p-4">
               <div className="text-3xl mb-2">🏥</div>
               <h4 className="font-bold text-gray-800 mb-1">Campus Facilities</h4>
-              <p className="text-sm text-gray-600">Explore state-of-the-art dental facilities</p>
+              <p className="text-sm text-gray-800">Explore state-of-the-art dental facilities</p>
             </div>
             <div className="text-center p-4">
               <div className="text-3xl mb-2">📚</div>
               <h4 className="font-bold text-gray-800 mb-1">Learning Spaces</h4>
-              <p className="text-sm text-gray-600">Modern classrooms and clinical labs</p>
+              <p className="text-sm text-gray-800">Modern classrooms and clinical labs</p>
             </div>
             <div className="text-center p-4">
               <div className="text-3xl mb-2">👥</div>
               <h4 className="font-bold text-gray-800 mb-1">Campus Life</h4>
-              <p className="text-sm text-gray-600">Experience our vibrant community</p>
+              <p className="text-sm text-gray-800">Experience our vibrant community</p>
             </div>
           </div>
         </div>
@@ -245,7 +245,7 @@ const Home = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="mb-12">
             <h2 className="text-3xl font-bold text-brand-blue mb-2">{t.HOSPITAL_DIRECTIONS_MAP || 'Find Us on Map'}</h2>
-            <p className="text-gray-600">{t.HOSPITAL_MAP_SUB || 'Live interactive map with real-time location and distance calculation'}</p>
+            <p className="text-gray-800">{t.HOSPITAL_MAP_SUB || 'Live interactive map with real-time location and distance calculation'}</p>
           </div>
           
           <div className="w-full">

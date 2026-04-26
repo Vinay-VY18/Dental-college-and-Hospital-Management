@@ -14,6 +14,8 @@ export const translations = {
     PATIENT_LOGIN: "Patient Login",
     PATIENT_LOGOUT: "Patient Logout",
     PATIENT_DASHBOARD: "Patient Dashboard",
+    STUDENT_LOGIN: "Student Login",
+    STUDENT_LOGOUT: "Student Logout",
 
     // Admin Dashboard
     CLINICAL_MGMT: "Clinical Management",
@@ -259,7 +261,7 @@ export const translations = {
     PATIENTS_AHEAD: "patients ahead",
     DEPARTMENT: "Department",
     UPDATED_EVERY_15: "Updated every 15 seconds. Please watch the board for your token.",
-    PHONE_EXAMPLE: "e.g. 9845012345",
+    PHONE_EXAMPLE: "e.g. +919845012345",
     TRACKING_PLACEHOLDER: "e.g. RRDCH-1234",
     AT: "at",
     PATIENT_DASHBOARD_SUB: "View your profile details, current appointments, and past records.",
@@ -302,6 +304,8 @@ export const translations = {
     PATIENT_LOGIN: "ರೋಗಿ ಲಾಗಿನ್",
     PATIENT_LOGOUT: "ರೋಗಿ ಲಾಗ್‌ಔಟ್",
     PATIENT_DASHBOARD: "ರೋಗಿ ಡ್ಯಾಶ್‌ಬೋರ್ಡ್",
+    STUDENT_LOGIN: "ವಿದ್ಯಾರ್ಥಿ ಲಾಗಿನ್",
+    STUDENT_LOGOUT: "ವಿದ್ಯಾರ್ಥಿ ಲಾಗ್‌ಔಟ್",
 
     // Admin Dashboard
     CLINICAL_MGMT: "ಕ್ಲಿನಿಕಲ್ ನಿರ್ವಹಣೆ",
@@ -547,7 +551,7 @@ export const translations = {
     PATIENTS_AHEAD: "ಮುಂದೆ ಇರುವ ರೋಗಿಗಳು",
     DEPARTMENT: "ವಿಭಾಗ",
     UPDATED_EVERY_15: "ಪ್ರತಿ 15 ಸೆಕೆಂಡ್ಗೆ ನವೀಕರಿಸಲಾಗುತ್ತದೆ. ದಯವಿಟ್ಟು ನಿಮ್ಮ ಟೋಕನ್‌ಗಾಗಿ ಬೋರ್ಡ್ ಗಮನಿಸಿ.",
-    PHONE_EXAMPLE: "ಉದಾ. 9845012345",
+    PHONE_EXAMPLE: "ಉದಾ. +919845012345",
     TRACKING_PLACEHOLDER: "ಉದಾ. RRDCH-1234",
     AT: "ರಂದು",
     PATIENT_DASHBOARD_SUB: "ನಿಮ್ಮ ಪ್ರೊಫೈಲ್ ವಿವರಗಳು, ಪ್ರಸ್ತುತ ಅಪಾಯಿಂಟ್‌ಮೆಂಟ್‌ಗಳು ಮತ್ತು ಹಳೆಯ ದಾಖಲೆಗಳನ್ನು ನೋಡಿ.",

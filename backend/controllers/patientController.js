@@ -12,6 +12,62 @@ const generatePatientToken = (patient) => {
   );
 };
 
+const normalizePhoneNumber = (rawPhone) => {
+  const raw = String(rawPhone || '').trim();
+  if (!raw) return null;
+
+  // Convert common separators to a compact number representation.
+  let compact = raw.replace(/[\s\-()]/g, '');
+
+  // Handle international prefix notation 00XXXXXXXX.
+  if (compact.startsWith('00')) {
+    compact = `+${compact.slice(2)}`;
+  }
+
+  if (compact.startsWith('+')) {
+    const digits = compact.slice(1).replace(/\D/g, '');
+    if (digits.length < 8 || digits.length > 15) return null;
+    return `+${digits}`;
+  }
+
+  const digitsOnly = compact.replace(/\D/g, '');
+  if (!digitsOnly) return null;
+
+  // India-friendly defaults while still accepting international lengths.
+  if (digitsOnly.length === 10) return `+91${digitsOnly}`;
+  if (digitsOnly.length === 11 && digitsOnly.startsWith('0')) return `+91${digitsOnly.slice(1)}`;
+  if (digitsOnly.length === 12 && digitsOnly.startsWith('91')) return `+${digitsOnly}`;
+  if (digitsOnly.length >= 8 && digitsOnly.length <= 15) return `+${digitsOnly}`;
+
+  return null;
+};
+
+const buildPhoneLookupValues = (rawPhone) => {
+  const values = new Set();
+  const trimmed = String(rawPhone || '').trim();
+  const normalized = normalizePhoneNumber(trimmed);
+  const digitsOnly = trimmed.replace(/\D/g, '');
+
+  if (trimmed) values.add(trimmed);
+  if (normalized) values.add(normalized);
+  if (digitsOnly) values.add(digitsOnly);
+
+  if (normalized) {
+    const normalizedDigits = normalized.slice(1);
+    values.add(normalizedDigits);
+
+    // Backward compatibility for legacy Indian local formats in existing records.
+    if (normalized.startsWith('+91') && normalizedDigits.length === 12) {
+      const local = normalizedDigits.slice(2);
+      values.add(local);
+      values.add(`0${local}`);
+      values.add(`91${local}`);
+    }
+  }
+
+  return Array.from(values);
+};
+
 const DAY_INDEX = {
   SUN: 0,
   MON: 1,
@@ -209,6 +265,12 @@ const parseDoctorSchedule = (scheduleText) => {
 
 const normalizeDepartment = (value) => String(value || '').trim().toLowerCase();
 
+const isSameCalendarDate = (leftDate, rightDate) => (
+  leftDate.getFullYear() === rightDate.getFullYear()
+  && leftDate.getMonth() === rightDate.getMonth()
+  && leftDate.getDate() === rightDate.getDate()
+);
+
 const getPublicHolidayInfo = (dateObj) => {
   const mm = String(dateObj.getMonth() + 1).padStart(2, '0');
   const dd = String(dateObj.getDate()).padStart(2, '0');
@@ -252,6 +314,9 @@ const buildBookingAvailability = async (department, dateInput) => {
 
   const dayIndex = bookingDate.getDay();
   const { isPublicHoliday, holidayName } = getPublicHolidayInfo(bookingDate);
+  const now = new Date();
+  const isBookingForToday = isSameCalendarDate(bookingDate, now);
+  const currentTimeInMinutes = (now.getHours() * 60) + now.getMinutes();
 
   const start = new Date(`${dateInput}T00:00:00`);
   const end = new Date(`${dateInput}T23:59:59.999`);
@@ -302,6 +367,14 @@ const buildBookingAvailability = async (department, dateInput) => {
       slots.length >= MIN_DEPARTMENT_SLOT_COUNT
         ? slots
         : standardDepartmentSlots;
+
+    const remainingSlots = isBookingForToday
+      ? normalizedSlots.filter((slot) => {
+          const slotMinutes = toMinutes(slot);
+          return slotMinutes !== null && slotMinutes >= currentTimeInMinutes;
+        })
+      : normalizedSlots;
+
     const normalizedTiming =
       slots.length >= MIN_DEPARTMENT_SLOT_COUNT
         ? dayTiming
@@ -314,7 +387,7 @@ const buildBookingAvailability = async (department, dateInput) => {
       schedule: parsed.raw || doctor.schedule || 'Not specified',
       dayStatus: 'Available',
       dayTiming: normalizedTiming,
-      availableSlots: normalizedSlots
+      availableSlots: remainingSlots
     };
   });
 
@@ -442,9 +515,17 @@ const registerPatientAccount = async (req, res) => {
       return res.status(400).json({ success: false, message: 'Name, phone, and password are required.' });
     }
 
+    const normalizedPhone = normalizePhoneNumber(phone);
+    if (!normalizedPhone) {
+      return res.status(400).json({ success: false, message: 'Enter a valid phone number with country code (example: +919876543210).' });
+    }
+
+    const phoneLookupValues = buildPhoneLookupValues(phone);
+    const phoneQuery = { $or: [{ phone: { $in: phoneLookupValues } }, { phoneNumber: { $in: phoneLookupValues } }] };
+
     const query = email
-      ? { $or: [{ phone }, { email: email.toLowerCase().trim() }] }
-      : { phone };
+      ? { $or: [...phoneQuery.$or, { email: email.toLowerCase().trim() }] }
+      : phoneQuery;
 
     let patient = await Patient.findOne(query).select('+password');
 
@@ -454,14 +535,16 @@ const registerPatientAccount = async (req, res) => {
 
     if (patient && !patient.password) {
       patient.name = name;
-      patient.phone = phone;
+      patient.phone = normalizedPhone;
+      patient.phoneNumber = normalizedPhone;
       patient.email = email ? email.toLowerCase().trim() : patient.email;
       patient.password = password;
       await patient.save();
     } else if (!patient) {
       patient = await Patient.create({
         name,
-        phone,
+        phone: normalizedPhone,
+        phoneNumber: normalizedPhone,
         email: email ? email.toLowerCase().trim() : undefined,
         password
       });
@@ -495,15 +578,28 @@ const loginPatientAccount = async (req, res) => {
       return res.status(400).json({ success: false, message: 'Patient ID or phone, and password are required.' });
     }
 
-    const patient = await Patient.findOne(patientId ? { patientId: patientId.trim().toUpperCase() } : { phone }).select('+password');
+    let patient;
+    if (patientId) {
+      patient = await Patient.findOne({ patientId: patientId.trim().toUpperCase() }).select('+password');
+    } else {
+      const normalizedPhone = normalizePhoneNumber(phone);
+      if (!normalizedPhone) {
+        return res.status(400).json({ success: false, message: 'Enter a valid phone number with country code (example: +919876543210).' });
+      }
+
+      const phoneLookupValues = buildPhoneLookupValues(phone);
+      patient = await Patient.findOne({
+        $or: [{ phone: { $in: phoneLookupValues } }, { phoneNumber: { $in: phoneLookupValues } }]
+      }).select('+password');
+    }
 
     if (!patient || !patient.password) {
-      return res.status(401).json({ success: false, message: 'Account not found. Please register first.' });
+      return res.json({ success: false, message: 'Account not found. Please register first.' });
     }
 
     const matched = await patient.matchPassword(password);
     if (!matched) {
-      return res.status(401).json({ success: false, message: 'Invalid credentials.' });
+      return res.json({ success: false, message: 'Invalid credentials.' });
     }
 
     const token = generatePatientToken(patient);
@@ -603,6 +699,11 @@ const bookAppointment = async (req, res) => {
       return res.status(400).json({ success: false, message: 'Name, phone, department, date, and time are required.' });
     }
 
+    const normalizedPhone = normalizePhoneNumber(phone);
+    if (!normalizedPhone) {
+      return res.status(400).json({ success: false, message: 'Enter a valid phone number with country code (example: +919876543210).' });
+    }
+
     const availability = await buildBookingAvailability(department, date);
 
     if (availability.isPublicHoliday) {
@@ -628,9 +729,21 @@ const bookAppointment = async (req, res) => {
     }
 
     // Find or create patient
-    let patient = await Patient.findOne({ phone });
+    const phoneLookupValues = buildPhoneLookupValues(phone);
+    let patient = await Patient.findOne({
+      $or: [{ phone: { $in: phoneLookupValues } }, { phoneNumber: { $in: phoneLookupValues } }]
+    });
     if (!patient) {
-      patient = new Patient({ name, phone });
+      patient = new Patient({ name, phone: normalizedPhone, phoneNumber: normalizedPhone });
+      await patient.save();
+    } else {
+      patient.name = patient.name || name;
+      if (!patient.phone || patient.phone !== normalizedPhone) {
+        patient.phone = normalizedPhone;
+      }
+      if (!patient.phoneNumber || patient.phoneNumber !== normalizedPhone) {
+        patient.phoneNumber = normalizedPhone;
+      }
       await patient.save();
     }
 
@@ -728,6 +841,42 @@ const callNextPatient = async (req, res) => {
       });
     }
 
+    // 5. Trigger Notification for patient whose turn is coming up
+    if (inTreatment) {
+      const notifyTokenNumber = inTreatment.tokenNumber + 2;
+      const patientToNotify = await Appointment.findOne({
+        department,
+        date: { $gte: start, $lt: end },
+        tokenNumber: notifyTokenNumber,
+        status: 'Pending'
+      }).populate('patient');
+
+      if (patientToNotify) {
+        const Subscription = require('../models/Subscription');
+        const webpush = require('web-push');
+
+        webpush.setVapidDetails(
+          process.env.VAPID_SUBJECT || 'mailto:admin@rrdch.edu.in',
+          process.env.VAPID_PUBLIC_KEY,
+          process.env.VAPID_PRIVATE_KEY
+        );
+
+        const subObj = await Subscription.findOne({ patient: patientToNotify.patient._id });
+        if (subObj) {
+           const payload = JSON.stringify({
+             title: 'RRDCH: Your Turn is Soon! / ಆರ್.ಆರ್.ಡಿ.ಸಿ.ಎಚ್: ನಿಮ್ಮ ಸರದಿ ಹತ್ತಿರದಲ್ಲಿದೆ!',
+             body: `Current Token: ${inTreatment.tokenNumber}. You are Token ${notifyTokenNumber}. Please proceed to the ${department} department.`
+           });
+           try {
+             await webpush.sendNotification(subObj.subscription, payload);
+             console.log(`Push notification sent to ${notifyTokenNumber}`);
+           } catch(e) {
+             console.error("Web push error", e);
+           }
+        }
+      }
+    }
+
     res.json({ success: true, message: 'Queue advanced' });
   } catch (error) {
     res.status(500).json({ success: false, error: error.message });
@@ -815,7 +964,24 @@ const getAllAppointmentsAdmin = async (req, res) => {
     const appointments = await Appointment.find(query)
       .populate('patient')
       .populate('assignedDoctor', 'name specialty')
-      .sort({ tokenNumber: 1 });
+      .sort({ tokenNumber: 1 })
+      .lean();
+      
+    try {
+      const Subscription = require('../models/Subscription');
+      const subs = await Subscription.find({});
+      const subPatientIds = new Set(subs.map(s => s.patient.toString()));
+      appointments.forEach(appt => {
+        if (appt.patient && subPatientIds.has(appt.patient._id.toString())) {
+          appt.hasPush = true;
+        } else {
+          appt.hasPush = false;
+        }
+      });
+    } catch (e) {
+      console.error('Subscription error in admin', e);
+    }
+    
     res.json({ success: true, appointments });
   } catch (error) {
     res.status(500).json({ success: false, error: error.message });
@@ -850,6 +1016,74 @@ const editAppointmentAdmin = async (req, res) => {
   }
 };
 
+const verifyPatientIdentity = async (req, res) => {
+  try {
+    const { patientId, phone } = req.body;
+
+    if (!patientId && !phone) {
+      return res.status(400).json({ success: false, message: 'Patient ID or phone is required.' });
+    }
+
+    let patient;
+    if (patientId) {
+      patient = await Patient.findOne({ patientId: patientId.trim().toUpperCase() });
+    } else {
+      const normalizedPhone = normalizePhoneNumber(phone);
+      if (!normalizedPhone) {
+        return res.status(400).json({ success: false, message: 'Enter a valid phone number with country code (example: +919876543210).' });
+      }
+
+      const phoneLookupValues = buildPhoneLookupValues(phone);
+      patient = await Patient.findOne({
+        $or: [{ phone: { $in: phoneLookupValues } }, { phoneNumber: { $in: phoneLookupValues } }]
+      });
+    }
+
+    if (!patient) {
+      return res.status(404).json({ success: false, message: 'Patient account not found.' });
+    }
+
+    res.json({
+      success: true,
+      message: 'Patient verified successfully.',
+      patientId: patient.patientId,
+      name: patient.name
+    });
+  } catch (error) {
+    res.status(400).json({ success: false, message: error.message });
+  }
+};
+
+const resetPatientPassword = async (req, res) => {
+  try {
+    const { patientId, newPassword } = req.body;
+
+    if (!patientId || !newPassword) {
+      return res.status(400).json({ success: false, message: 'Patient ID and new password are required.' });
+    }
+
+    if (newPassword.length < 6) {
+      return res.status(400).json({ success: false, message: 'Password must be at least 6 characters long.' });
+    }
+
+    const patient = await Patient.findOne({ patientId: patientId.trim().toUpperCase() });
+
+    if (!patient) {
+      return res.status(404).json({ success: false, message: 'Patient account not found.' });
+    }
+
+    patient.password = newPassword;
+    await patient.save();
+
+    res.json({
+      success: true,
+      message: 'Password reset successfully. Please login with your new password.'
+    });
+  } catch (error) {
+    res.status(400).json({ success: false, message: error.message });
+  }
+};
+
 module.exports = {
   registerPatientAccount,
   loginPatientAccount,
@@ -863,5 +1097,7 @@ module.exports = {
   deleteAppointmentAdmin,
   editAppointmentAdmin,
   callNextPatient,
-  getLiveStatus
+  getLiveStatus,
+  verifyPatientIdentity,
+  resetPatientPassword
 };

@@ -106,8 +106,8 @@ const LiveQueueView = () => {
   }, [selectedDept]);
 
   return (
-    <div className="min-h-screen bg-gray-900 text-white p-6 flex flex-col items-center justify-center">
-      <h1 className="text-4xl font-black text-brand-teal mb-8 flex items-center tracking-tighter">
+    <div className="min-h-screen bg-black text-white p-6 flex flex-col items-center justify-center">
+      <h1 className="text-4xl font-bold text-brand-teal mb-8 flex items-center tracking-normaler">
         <Activity className="mr-3 h-10 w-10 text-brand-teal animate-pulse" /> {t.RRDCH_LIVE_QUEUE}
       </h1>
 
@@ -116,7 +116,7 @@ const LiveQueueView = () => {
           <button
             key={dept.id}
             onClick={() => setSelectedDept(dept.id)}
-            className={`px-6 py-2 rounded-full text-sm font-bold whitespace-nowrap transition-all ${selectedDept === dept.id ? 'bg-brand-teal text-white shadow-[0_0_15px_rgba(45,212,191,0.5)]' : 'bg-gray-800 text-gray-400 hover:bg-gray-700'}`}
+            className={`px-6 py-2 rounded-full text-sm font-bold whitespace-nowrap transition-all ${selectedDept === dept.id ? 'bg-brand-teal text-white shadow-[0_0_15px_rgba(45,212,191,0.5)]' : 'bg-gray-800 text-gray-300 hover:bg-gray-700'}`}
           >
             {language === 'KN' ? deptMap[dept.name] || dept.name : dept.name}
           </button>
@@ -124,26 +124,26 @@ const LiveQueueView = () => {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8 w-full max-w-4xl">
-        <div className="bg-gray-800 border-t-8 border-brand-teal rounded-3xl p-10 text-center shadow-2xl">
+        <div className="bg-gray-900 border-t-8 border-brand-teal rounded-3xl p-10 text-center shadow-[0_0_20px_rgba(0,0,0,0.5)]">
           <div className="text-gray-400 text-sm font-bold uppercase tracking-widest mb-4">{t.NOW_SERVING}</div>
-          <div className="text-9xl font-black text-white mb-2">{liveData.currentToken || "---"}</div>
+          <div className="text-9xl font-bold text-white mb-2">{liveData.currentToken || "---"}</div>
           <div className="text-brand-teal text-xs font-bold animate-pulse">{t.LIVE_STATUS}</div>
         </div>
 
-        <div className="bg-gray-800 border-t-8 border-gray-600 rounded-3xl p-10 text-center shadow-2xl flex flex-col justify-between">
+        <div className="bg-gray-900 border-t-8 border-brand-blue rounded-3xl p-10 text-center shadow-[0_0_20px_rgba(0,0,0,0.5)] flex flex-col justify-between">
           <div>
             <div className="text-gray-400 text-sm font-bold uppercase tracking-widest mb-4">{t.ESTIMATED_WAIT}</div>
-            <div className="text-6xl font-black text-white">{liveData.waitingCount * 10} <span className="text-2xl text-gray-400">{t.MINS}</span></div>
-            <div className="text-gray-500 text-xs mt-2 italic">{liveData.waitingCount} {t.PATIENTS_AHEAD}</div>
+            <div className="text-6xl font-bold text-white">{liveData.waitingCount * 10} <span className="text-2xl text-gray-400">{t.MINS}</span></div>
+            <div className="text-gray-400 text-xs mt-2 italic">{liveData.waitingCount} {t.PATIENTS_AHEAD}</div>
           </div>
           
-          <div className="mt-8 pt-8 border-t border-gray-700">
-             <div className="flex items-center justify-center text-gray-400 space-x-2">
+          <div className="mt-8 pt-8 border-t border-gray-800">
+             <div className="flex items-center justify-center text-gray-300 space-x-2">
                <Users className="h-5 w-5" />
                <span className="text-sm font-medium">{t.DEPARTMENT}: {language === 'KN' ? deptMap[departments.find(d => d.id === selectedDept)?.name] || departments.find(d => d.id === selectedDept)?.name : departments.find(d => d.id === selectedDept)?.name}</span>
              </div>
-             <div className="mt-3 text-xs font-bold text-gray-500">
-               Connection: <span className={connectionStatus === 'connected' ? 'text-green-400' : connectionStatus === 'disconnected' ? 'text-yellow-400' : 'text-red-400'}>
+             <div className="mt-3 text-xs font-bold text-gray-400">
+               Connection: <span className={connectionStatus === 'connected' ? 'text-green-400' : connectionStatus === 'disconnected' ? 'text-amber-400' : 'text-red-400'}>
                  {connectionStatus === 'connected' ? '🟢 Live' : connectionStatus === 'disconnected' ? '🟡 Polling' : '🔴 Error'}
                </span>
              </div>
@@ -151,7 +151,7 @@ const LiveQueueView = () => {
         </div>
       </div>
 
-      <p className="mt-12 text-gray-600 text-sm flex items-center">
+      <p className="mt-12 text-gray-400 text-sm flex items-center">
         <Clock className="mr-2 h-4 w-4" /> {connectionStatus === 'connected' ? 'Real-time updates' : t.UPDATED_EVERY_15}
       </p>
     </div>

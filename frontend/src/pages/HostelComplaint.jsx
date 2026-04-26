@@ -27,9 +27,8 @@ export const HostelComplaint = () => {
           <h1 className="text-3xl font-bold text-brand-blue flex items-center">
             <Home className="mr-3 h-8 w-8 text-brand-teal" /> Hostel Utilities
           </h1>
-          <button className="bg-brand-blue text-white px-3 py-1.5 rounded text-sm hover:bg-opacity-90">
-            Admin Dashboard
-          </button>
+          
+          
         </div>
 
         <div className="bg-white p-8 rounded-xl shadow-sm border border-gray-100">

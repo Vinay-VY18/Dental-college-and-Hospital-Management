@@ -8,6 +8,7 @@ const PatientSchema = new mongoose.Schema({
   phone: { type: String, required: true, unique: true },
   email: { type: String, unique: true, sparse: true, lowercase: true, trim: true },
   password: { type: String, minlength: 6, select: false },
+  language: { type: String, enum: ['EN', 'KN'], default: 'EN' },
   createdAt: { type: Date, default: Date.now }
 });
 

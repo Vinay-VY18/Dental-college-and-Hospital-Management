@@ -122,15 +122,15 @@ const CollegeHome = () => {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
             <div className="p-8 bg-white rounded-xl shadow-sm border border-gray-100">
               <div className="text-4xl font-bold text-brand-teal mb-2">BDS + MDS</div>
-              <div className="text-gray-600 font-medium">{t.COLLEGE_STRUCTURED_PROGRAMS}</div>
+              <div className="text-gray-800 font-medium">{t.COLLEGE_STRUCTURED_PROGRAMS}</div>
             </div>
             <div className="p-8 bg-white rounded-xl shadow-sm border border-gray-100">
               <div className="text-4xl font-bold text-brand-teal mb-2">9</div>
-              <div className="text-gray-600 font-medium">{t.COLLEGE_ACADEMIC_DEPARTMENTS}</div>
+              <div className="text-gray-800 font-medium">{t.COLLEGE_ACADEMIC_DEPARTMENTS}</div>
             </div>
             <div className="p-8 bg-white rounded-xl shadow-sm border border-gray-100">
               <div className="text-4xl font-bold text-brand-teal mb-2">5000+</div>
-              <div className="text-gray-600 font-medium">{t.COLLEGE_ALUMNI_NETWORK}</div>
+              <div className="text-gray-800 font-medium">{t.COLLEGE_ALUMNI_NETWORK}</div>
             </div>
           </div>
         </div>
@@ -139,16 +139,16 @@ const CollegeHome = () => {
       <section className="py-16 bg-white border-t border-b border-gray-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="mb-8">
-            <h2 className="text-3xl font-black text-brand-blue mb-2">{t.COLLEGE_ADMISSION_BLOCK_TITLE}</h2>
-            <p className="text-gray-600">{t.COLLEGE_ADMISSION_BLOCK_SUB}</p>
+            <h2 className="text-3xl font-bold text-brand-blue mb-2">{t.COLLEGE_ADMISSION_BLOCK_TITLE}</h2>
+            <p className="text-gray-800">{t.COLLEGE_ADMISSION_BLOCK_SUB}</p>
           </div>
 
           {isAdmissionLoading ? (
-            <div className="bg-gray-50 rounded-2xl border border-gray-200 p-8 text-gray-500 font-semibold">
+            <div className="bg-gray-50 rounded-2xl border border-gray-200 p-8 text-gray-800 font-semibold">
               {t.COLLEGE_ADMISSION_LOADING}
             </div>
           ) : admissions.length === 0 ? (
-            <div className="bg-gray-50 rounded-2xl border border-gray-200 p-8 text-gray-500 font-semibold">
+            <div className="bg-gray-50 rounded-2xl border border-gray-200 p-8 text-gray-800 font-semibold">
               {t.COLLEGE_ADMISSION_NO_DATA}
             </div>
           ) : (
@@ -171,8 +171,8 @@ const CollegeHome = () => {
                   <article className="lg:col-span-2 bg-brand-light rounded-2xl border border-blue-100 p-6">
                     <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-5">
                       <div>
-                        <h3 className="text-2xl font-black text-brand-blue">{language === 'KN' ? deptMap[selectedDept] || selectedDept : selectedDept}</h3>
-                        <p className="text-sm text-gray-600 mt-1">{t.COLLEGE_ADMISSION_PROGRAM}: {selectedAdmissions.map((item) => item.degree).join(' + ')}</p>
+                        <h3 className="text-2xl font-bold text-brand-blue">{language === 'KN' ? deptMap[selectedDept] || selectedDept : selectedDept}</h3>
+                        <p className="text-sm text-gray-800 mt-1">{t.COLLEGE_ADMISSION_PROGRAM}: {selectedAdmissions.map((item) => item.degree).join(' + ')}</p>
                       </div>
                       <div className="px-4 py-2 rounded-xl bg-white border border-blue-100 text-sm font-bold text-brand-blue">
                         {t.APPLICATION_STATUS}
@@ -188,17 +188,17 @@ const CollegeHome = () => {
                         return (
                           <div key={program._id || `${program.department}-${program.degree}`} className="bg-white border border-gray-100 rounded-xl p-4">
                             <div className="flex items-center justify-between mb-3">
-                              <h4 className="text-lg font-black text-brand-blue">{program.degree}</h4>
-                              <span className="text-xs font-bold text-gray-500 uppercase tracking-wide">{t.SEAT_MATRIX}</span>
+                              <h4 className="text-lg font-bold text-brand-blue">{program.degree}</h4>
+                              <span className="text-xs font-bold text-gray-800 uppercase tracking-wide">{t.SEAT_MATRIX}</span>
                             </div>
 
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-3">
                               <div>
-                                <p className="text-2xl font-black text-brand-blue">{program.availableSeats} / {program.totalSeats}</p>
+                                <p className="text-2xl font-bold text-brand-blue">{program.availableSeats} / {program.totalSeats}</p>
                                 <div className="mt-3 w-full h-2 bg-gray-100 rounded-full overflow-hidden">
                                   <div className="h-full bg-brand-teal" style={{ width: `${seatPercent}%` }}></div>
                                 </div>
-                                <p className="text-xs text-gray-500 mt-2">{t.COLLEGE_ADMISSION_SEAT_TEXT}: {seatPercent}%</p>
+                                <p className="text-xs text-gray-800 mt-2">{t.COLLEGE_ADMISSION_SEAT_TEXT}: {seatPercent}%</p>
                               </div>
 
                               <div>
@@ -207,7 +207,7 @@ const CollegeHome = () => {
                               </div>
                             </div>
 
-                            <p className="text-xs text-gray-500 uppercase tracking-wide font-bold mb-2">{t.ELIGIBILITY}</p>
+                            <p className="text-xs text-gray-800 uppercase tracking-wide font-bold mb-2">{t.ELIGIBILITY}</p>
                             <ul className="space-y-1 text-sm text-gray-700 list-disc list-inside">
                               {(program.eligibility || []).slice(0, 3).map((rule, idx) => (
                                 <li key={`${program.degree}-${idx}`}>{rule}</li>
@@ -220,11 +220,11 @@ const CollegeHome = () => {
                   </article>
 
                   <article className="bg-white rounded-2xl border border-gray-100 p-6">
-                    <h4 className="text-lg font-black text-brand-blue mb-4">{t.COLLEGE_ADMISSION_DEPT_INFO}</h4>
+                    <h4 className="text-lg font-bold text-brand-blue mb-4">{t.COLLEGE_ADMISSION_DEPT_INFO}</h4>
                     <div className="space-y-3 text-sm text-gray-700">
-                      <p><span className="font-semibold text-gray-500">{t.HOD}:</span> {selectedProfile?.hod || t.NOT_AVAILABLE}</p>
-                      <p><span className="font-semibold text-gray-500">{t.FACULTY_SIZE}:</span> {selectedProfile?.facultyCount ?? 0}</p>
-                      <p className="leading-relaxed"><span className="font-semibold text-gray-500">{t.COLLEGE_ADMISSION_OVERVIEW}:</span> {selectedProfile?.description || t.COLLEGE_ADMISSION_OVERVIEW_FALLBACK}</p>
+                      <p><span className="font-semibold text-gray-800">{t.HOD}:</span> {selectedProfile?.hod || t.NOT_AVAILABLE}</p>
+                      <p><span className="font-semibold text-gray-800">{t.FACULTY_SIZE}:</span> {selectedProfile?.facultyCount ?? 0}</p>
+                      <p className="leading-relaxed"><span className="font-semibold text-gray-800">{t.COLLEGE_ADMISSION_OVERVIEW}:</span> {selectedProfile?.description || t.COLLEGE_ADMISSION_OVERVIEW_FALLBACK}</p>
                     </div>
 
                     <Link
@@ -245,8 +245,8 @@ const CollegeHome = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-10">
             <div>
-              <h2 className="text-3xl font-black text-brand-blue mb-2">{t.COLLEGE_LIVE_TOPPERS_TITLE}</h2>
-              <p className="text-gray-600 text-lg">{t.COLLEGE_LIVE_TOPPERS_SUB}</p>
+              <h2 className="text-3xl font-bold text-brand-blue mb-2">{t.COLLEGE_LIVE_TOPPERS_TITLE}</h2>
+              <p className="text-gray-800 text-lg">{t.COLLEGE_LIVE_TOPPERS_SUB}</p>
             </div>
             <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-red-50 border border-red-200 text-red-600 text-sm font-bold w-max">
               <Activity className="w-4 h-4 animate-pulse" />
@@ -256,22 +256,22 @@ const CollegeHome = () => {
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
             <article className="rounded-2xl border border-yellow-200 bg-yellow-50 p-6 shadow-sm">
-              <h3 className="text-lg font-black text-brand-blue mb-4 flex items-center">
+              <h3 className="text-lg font-bold text-brand-blue mb-4 flex items-center">
                 <Trophy className="w-5 h-5 mr-2 text-yellow-500" />
                 {t.COLLEGE_CURRENT_TOPPER}
               </h3>
-              <p className="text-2xl font-black text-gray-800">{currentTopper.name}</p>
-              <p className="text-sm text-gray-600 mt-2">{t.COLLEGE_PROGRAM_LABEL}: {currentTopper.program}</p>
-              <p className="text-sm text-gray-600">{t.COLLEGE_SCORE_LABEL}: <span className="font-bold text-brand-blue">{currentTopper.score}</span></p>
+              <p className="text-2xl font-bold text-gray-800">{currentTopper.name}</p>
+              <p className="text-sm text-gray-800 mt-2">{t.COLLEGE_PROGRAM_LABEL}: {currentTopper.program}</p>
+              <p className="text-sm text-gray-800">{t.COLLEGE_SCORE_LABEL}: <span className="font-bold text-brand-blue">{currentTopper.score}</span></p>
             </article>
 
             <article className="rounded-2xl border border-blue-200 bg-blue-50 p-6 shadow-sm">
-              <h3 className="text-lg font-black text-brand-blue mb-4 flex items-center">
+              <h3 className="text-lg font-bold text-brand-blue mb-4 flex items-center">
                 <Medal className="w-5 h-5 mr-2 text-brand-teal" />
                 {t.COLLEGE_CURRENT_ACHIEVEMENT}
               </h3>
-              <p className="text-lg font-black text-gray-800">{currentAchievement.title}</p>
-              <p className="text-sm text-gray-600 mt-2">{t.COLLEGE_HIGHLIGHT_LABEL}: {currentAchievement.detail}</p>
+              <p className="text-lg font-bold text-gray-800">{currentAchievement.title}</p>
+              <p className="text-sm text-gray-800 mt-2">{t.COLLEGE_HIGHLIGHT_LABEL}: {currentAchievement.detail}</p>
             </article>
           </div>
 
@@ -282,7 +282,7 @@ const CollegeHome = () => {
                 {toppers.map((item, idx) => (
                   <div
                     key={item.name}
-                    className={`px-3 py-2 rounded-lg border text-sm ${idx === topperIndex ? 'bg-white border-brand-teal text-brand-blue font-bold' : 'bg-white border-gray-200 text-gray-600'}`}
+                    className={`px-3 py-2 rounded-lg border text-sm ${idx === topperIndex ? 'bg-white border-brand-teal text-brand-blue font-bold' : 'bg-white border-gray-200 text-gray-800'}`}
                   >
                     {item.name} - {item.score}
                   </div>
@@ -296,7 +296,7 @@ const CollegeHome = () => {
                 {achievements.map((item, idx) => (
                   <div
                     key={item.title}
-                    className={`px-3 py-2 rounded-lg border text-sm ${idx === achievementIndex ? 'bg-white border-brand-teal text-brand-blue font-bold' : 'bg-white border-gray-200 text-gray-600'}`}
+                    className={`px-3 py-2 rounded-lg border text-sm ${idx === achievementIndex ? 'bg-white border-brand-teal text-brand-blue font-bold' : 'bg-white border-gray-200 text-gray-800'}`}
                   >
                     {item.title}
                   </div>
@@ -305,7 +305,7 @@ const CollegeHome = () => {
             </div>
           </div>
 
-          <p className="mt-6 text-xs font-semibold tracking-wide text-gray-500 uppercase">
+          <p className="mt-6 text-xs font-semibold tracking-wide text-gray-800 uppercase">
             {t.COLLEGE_ROTATES_EVERY_3}
           </p>
         </div>
@@ -316,7 +316,7 @@ const CollegeHome = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="mb-12">
             <h2 className="text-3xl font-bold text-brand-teal mb-2">{t.COLLEGE_LOCATION || 'Visit Our Campus'}</h2>
-            <p className="text-gray-600">{t.COLLEGE_LOCATION_SUB || 'Interactive map showing our location with real-time distance calculation'}</p>
+            <p className="text-gray-800">{t.COLLEGE_LOCATION_SUB || 'Interactive map showing our location with real-time distance calculation'}</p>
           </div>
           
           <div className="w-full">

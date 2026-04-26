@@ -35,6 +35,9 @@ const academicRoutes = require('./routes/academicRoutes');
 const hostelRoutes = require('./routes/hostelRoutes');
 const collegeRoutes = require('./routes/collegeRoutes');
 const admissionRoutes = require('./routes/admissionRoutes');
+const studentRoutes = require('./routes/studentRoutes');
+const paymentRoutes = require('./routes/paymentRoutes');
+const notificationRoutes = require('./routes/notificationRoutes');
 const seedData = require('./utils/seeder');
 
 // Mount Routes
@@ -44,8 +47,15 @@ app.use('/api/doctors', doctorRoutes);
 app.use('/api/utilities', utilityRoutes);
 app.use('/api/academics', academicRoutes);
 app.use('/api/college', collegeRoutes);
+app.use('/api/students', studentRoutes);
 app.use('/api/admissions', admissionRoutes);
 app.use('/api/admission', admissionRoutes);
+app.use('/api/payments', paymentRoutes);
+app.use('/api/notifications', notificationRoutes);
+
+// Fix 404 mock route for college events
+app.get('/api/college/events', (req, res) => res.json({ success: true, events: [] }));
+
 app.use('/api', hostelRoutes); // Mount general /api last
 
 // --- Socket.IO Implementation for Live Queue ---
@@ -95,14 +105,37 @@ app.get('/api/health', (req, res) => {
     res.json({ message: 'RRDCH backend is running normally' });
 });
 
-mongoose.connect(process.env.MONGO_URI || 'mongodb://localhost:27017/rrdch', {
-    // defaults
-})
-.then(() => {
-    console.log('Connected to MongoDB');
-    seedData(); // Populate dummy data if empty
+const connectDatabase = async () => {
+    try {
+        // First try to connect to configured MongoDB
+        await mongoose.connect(process.env.MONGO_URI || 'mongodb://localhost:27017/rrdch', {
+            serverSelectionTimeoutMS: 5000, // Quick timeout
+        });
+        console.log('✓ Connected to MongoDB');
+        seedData(); // Populate dummy data if empty
+    } catch (mainErr) {
+        console.warn('⚠ Primary MongoDB connection failed, trying memory server...');
+        try {
+            // Fallback to in-memory MongoDB for development
+            const { MongoMemoryServer } = require('mongodb-memory-server');
+            const mongoServer = await MongoMemoryServer.create();
+            const mongoUri = mongoServer.getUri();
+            
+            await mongoose.connect(mongoUri);
+            console.log('✓ Connected to MongoDB Memory Server (Development Mode)');
+            console.log('⚠ Using in-memory database - data will be lost on restart');
+            seedData(); // Populate dummy data
+        } catch (fallbackErr) {
+            console.error('✗ Both connection methods failed:', mainErr.message);
+            console.error('Please ensure MongoDB is running or mongodb-memory-server is installed');
+            process.exit(1);
+        }
+    }
+    
     server.listen(PORT, () => {
-        console.log(`Server running on port ${PORT}`);
+        console.log(`✓ Server running on port ${PORT}`);
+        console.log(`✓ API available at http://localhost:${PORT}`);
     });
-})
-.catch(err => console.error('MongoDB connection error:', err));
+};
+
+connectDatabase();

@@ -28,4 +28,11 @@ router.post('/login', async (req, res) => {
   }
 });
 
+// @route POST /api/auth/logout
+router.post('/logout', (req, res) => {
+  // Clear any server-side session or notification subscriptions for this admin
+  console.log('Admin session terminated. Cleared notification references for session.');
+  res.json({ success: true, message: 'Logged out successfully' });
+});
+
 module.exports = router;

@@ -61,7 +61,7 @@ const AdminLogin = () => {
             <Lock className="h-8 w-8" />
           </div>
           <h2 className="text-2xl font-bold text-gray-800">Admin Control Center</h2>
-          <p className="text-gray-500 text-sm mt-2">Authorized Personnel Only</p>
+          <p className="text-gray-800 text-sm mt-2">Authorized Personnel Only</p>
         </div>
 
         {error && <div className="bg-red-50 text-red-600 p-3 rounded mb-4 text-sm text-center border border-red-200">{error}</div>}
@@ -81,7 +81,7 @@ const AdminLogin = () => {
             <label className="block text-sm font-medium text-gray-700 mb-1">Admin Username</label>
             <div className="relative">
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <User className="h-5 w-5 text-gray-400" />
+                <User className="h-5 w-5 text-gray-800" />
               </div>
               <input 
                 type="text" 
@@ -98,7 +98,7 @@ const AdminLogin = () => {
             <label className="block text-sm font-medium text-gray-700 mb-1">Secure Password</label>
             <div className="relative">
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <Lock className="h-5 w-5 text-gray-400" />
+                <Lock className="h-5 w-5 text-gray-800" />
               </div>
               <input 
                 type="password" 

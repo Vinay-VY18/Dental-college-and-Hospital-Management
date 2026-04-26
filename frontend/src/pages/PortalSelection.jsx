@@ -64,7 +64,7 @@ const PortalSelection = () => {
       <div className="max-w-6xl mx-auto">
         <div className="bg-white border border-gray-100 rounded-3xl shadow-sm overflow-hidden">
           <div className="bg-brand-blue text-white p-10">
-            <h1 className="text-4xl font-black mb-3">{content.title}</h1>
+            <h1 className="text-4xl font-bold mb-3">{content.title}</h1>
             <p className="text-brand-light text-lg max-w-3xl">{content.subtitle}</p>
           </div>
 
@@ -105,7 +105,7 @@ const PortalSelection = () => {
                   className="group bg-gray-50 border border-gray-200 rounded-xl px-5 py-4 font-semibold text-gray-700 hover:text-brand-blue hover:border-brand-teal hover:bg-white transition-all flex items-center justify-between"
                 >
                   <span>{page.name}</span>
-                  <ArrowRight className="w-4 h-4 opacity-60 group-hover:opacity-100" />
+                  <ArrowRight className="w-4 h-4 opacity-85 group-hover:opacity-100" />
                 </Link>
               ))}
             </div>

@@ -151,7 +151,7 @@ const WebsiteWelcomePopup = () => {
               />
             </div>
             <div>
-              <h2 className="text-2xl md:text-3xl font-black">{content.title}</h2>
+              <h2 className="text-2xl md:text-3xl font-bold">{content.title}</h2>
               <p className="text-brand-light mt-2 text-sm md:text-base">
                 {content.subtitle}
               </p>
@@ -201,7 +201,7 @@ const WebsiteWelcomePopup = () => {
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <section className="rounded-2xl border border-gray-200 bg-gray-50 p-5">
-              <h3 className="text-lg font-black text-brand-blue flex items-center gap-2">
+              <h3 className="text-lg font-bold text-brand-blue flex items-center gap-2">
                 <Hospital className="h-5 w-5 text-brand-teal" /> {content.hospitalSection}
               </h3>
               <ul className="mt-3 text-sm text-gray-700 space-y-2">
@@ -212,7 +212,7 @@ const WebsiteWelcomePopup = () => {
             </section>
 
             <section className="rounded-2xl border border-gray-200 bg-gray-50 p-5">
-              <h3 className="text-lg font-black text-brand-blue flex items-center gap-2">
+              <h3 className="text-lg font-bold text-brand-blue flex items-center gap-2">
                 <Building2 className="h-5 w-5 text-brand-teal" /> {content.collegeSection}
               </h3>
               <ul className="mt-3 text-sm text-gray-700 space-y-2">
@@ -225,35 +225,35 @@ const WebsiteWelcomePopup = () => {
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
             <section className="rounded-2xl border border-gray-200 p-5">
-              <h4 className="font-black text-brand-blue flex items-center gap-2">
+              <h4 className="font-bold text-brand-blue flex items-center gap-2">
                 <Stethoscope className="h-5 w-5 text-brand-teal" /> {content.patientFeatures}
               </h4>
-              <p className="text-sm text-gray-600 mt-2">
+              <p className="text-sm text-gray-800 mt-2">
                 {content.patientFeaturesDesc}
               </p>
             </section>
 
             <section className="rounded-2xl border border-gray-200 p-5">
-              <h4 className="font-black text-brand-blue flex items-center gap-2">
+              <h4 className="font-bold text-brand-blue flex items-center gap-2">
                 <GraduationCap className="h-5 w-5 text-brand-teal" /> {content.academicFeatures}
               </h4>
-              <p className="text-sm text-gray-600 mt-2">
+              <p className="text-sm text-gray-800 mt-2">
                 {content.academicFeaturesDesc}
               </p>
             </section>
 
             <section className="rounded-2xl border border-gray-200 p-5">
-              <h4 className="font-black text-brand-blue flex items-center gap-2">
+              <h4 className="font-bold text-brand-blue flex items-center gap-2">
                 <ShieldCheck className="h-5 w-5 text-brand-teal" /> {content.adminFeatures}
               </h4>
-              <p className="text-sm text-gray-600 mt-2">
+              <p className="text-sm text-gray-800 mt-2">
                 {content.adminFeaturesDesc}
               </p>
             </section>
           </div>
 
           <section className="rounded-2xl border border-brand-teal/30 bg-brand-light p-5">
-            <h4 className="font-black text-brand-blue flex items-center gap-2">
+            <h4 className="font-bold text-brand-blue flex items-center gap-2">
               <Globe className="h-5 w-5 text-brand-teal" /> {content.highlights}
             </h4>
             <ul className="mt-2 text-sm text-gray-700 space-y-1">

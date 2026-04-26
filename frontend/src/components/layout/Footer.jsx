@@ -35,7 +35,7 @@ const Footer = () => {
               {t.FOOTER_ABOUT_TEXT}
             </p>
             <div className="flex space-x-3">
-              <span className="bg-brand-teal/20 border border-brand-teal/40 px-3 py-1.5 rounded-lg text-[10px] font-black uppercase text-brand-teal tracking-widest leading-none flex items-center">
+              <span className="bg-brand-teal/20 border border-brand-teal/40 px-3 py-1.5 rounded-lg text-xs font-bold uppercase text-brand-teal tracking-widest leading-none flex items-center">
                 {t.NAAC_GRADE}
               </span>
             </div>
@@ -44,7 +44,7 @@ const Footer = () => {
           {/* Column 2: Quick Links & Regulatory */}
           <div className="grid grid-cols-2 gap-8">
             <div>
-              <h4 className="text-brand-teal font-black text-xs uppercase tracking-[0.2em] mb-6">{t.QUICK_LINKS}</h4>
+              <h4 className="text-brand-teal font-bold text-xs uppercase tracking-[0.2em] mb-6">{t.QUICK_LINKS}</h4>
               <ul className="space-y-3 text-sm font-medium opacity-80">
                 <li><Link to="/about" className="hover:text-brand-teal transition-all">{t.ABOUT}</Link></li>
                 <li><Link to="/admissions" className="hover:text-brand-teal transition-all">{t.ADMISSIONS}</Link></li>
@@ -52,7 +52,7 @@ const Footer = () => {
                 <li>
                   <Link 
                     to={sessionStorage.getItem('adminToken') ? "/admin/dashboard" : "/admin"} 
-                    className="text-brand-teal font-black text-xs uppercase hover:text-white transition-all underline decoration-brand-teal/30"
+                    className="text-brand-teal font-bold text-xs uppercase hover:text-white transition-all underline decoration-brand-teal/30"
                   >
                     {t.STAFF_LOGIN}
                   </Link>
@@ -60,7 +60,7 @@ const Footer = () => {
               </ul>
             </div>
             <div>
-              <h4 className="text-brand-teal font-black text-xs uppercase tracking-[0.2em] mb-6">{t.REGULATORY}</h4>
+              <h4 className="text-brand-teal font-bold text-xs uppercase tracking-[0.2em] mb-6">{t.REGULATORY}</h4>
               <ul className="space-y-3 text-sm font-medium opacity-80">
                 <li>{t.DCI_APPROVED}</li>
                 <li>{t.AFFILIATED_TO}</li>
@@ -70,7 +70,7 @@ const Footer = () => {
 
           {/* Column 3: Contact Info */}
           <div className="space-y-6">
-            <h4 className="text-brand-teal font-black text-xs uppercase tracking-[0.2em] mb-6">{t.CONTACT}</h4>
+            <h4 className="text-brand-teal font-bold text-xs uppercase tracking-[0.2em] mb-6">{t.CONTACT}</h4>
             <div className="space-y-4 text-sm opacity-80">
               <div className="flex items-start">
                 <MapPin className="w-5 h-5 mr-3 text-brand-teal shrink-0" />
@@ -90,7 +90,7 @@ const Footer = () => {
 
         {/* Global Bottom Bar */}
         <div className="pt-8 border-t border-white/10 flex flex-col md:flex-row justify-between items-center gap-4">
-          <div className="text-xs font-medium opacity-60">
+          <div className="text-xs font-medium opacity-85">
             &copy; {new Date().getFullYear()} RRDCH. {t.COPYRIGHT}
           </div>
           <div className="flex space-x-6 text-xs font-bold uppercase tracking-widest text-brand-teal">

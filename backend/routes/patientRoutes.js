@@ -13,12 +13,16 @@ const {
 	deleteAppointmentAdmin,
 	editAppointmentAdmin,
 	callNextPatient,
-	getLiveStatus
+	getLiveStatus,
+	verifyPatientIdentity,
+	resetPatientPassword
 } = require('../controllers/patientController');
 const { protect, authorize, protectPatient } = require('../middleware/auth');
 
 router.post('/register', registerPatientAccount);
 router.post('/login', loginPatientAccount);
+router.post('/verify-identity', verifyPatientIdentity);
+router.post('/reset-password', resetPatientPassword);
 router.get('/me', protectPatient, getMyPatientProfile);
 router.get('/my-appointments', protectPatient, getMyAppointments);
 router.get('/booking-availability', getBookingAvailability);

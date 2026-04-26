@@ -44,13 +44,13 @@ const Student = () => {
                     <div key={idx} className="flex flex-col sm:flex-row sm:items-center justify-between p-4 border rounded-lg hover:border-brand-teal transition-colors bg-gray-50">
                       <div>
                         <h3 className="font-bold text-gray-800">{item.year} BDS</h3>
-                        <p className="text-sm text-gray-600 mt-1">{item.description}</p>
+                        <p className="text-sm text-gray-800 mt-1">{item.description}</p>
                       </div>
                       <a href={item.fileLink || '#'} className="mt-3 sm:mt-0 flex items-center px-4 py-2 bg-white border border-gray-300 rounded text-brand-teal font-medium hover:bg-brand-light transition-colors shadow-sm self-start sm:self-auto">
                         <Download className="mr-2 h-4 w-4" /> Download PDF
                       </a>
                     </div>
-                  )) : <div className="text-gray-400 text-center py-4">Loading Syllabus...</div>}
+                  )) : <div className="text-gray-800 text-center py-4">Loading Syllabus...</div>}
                 </div>
               </div>
             </div>
@@ -74,8 +74,8 @@ const Student = () => {
                     {schedules.map((schedule, idx) => (
                       <tr key={idx} className="border-b hover:bg-gray-50">
                         <td className="py-3 px-6 text-brand-blue font-medium">{schedule.dept}</td>
-                        <td className="py-3 px-6 text-gray-600">{schedule.time}</td>
-                        <td className="py-3 px-6 text-gray-600">{schedule.location}</td>
+                        <td className="py-3 px-6 text-gray-800">{schedule.time}</td>
+                        <td className="py-3 px-6 text-gray-800">{schedule.location}</td>
                       </tr>
                     ))}
                   </tbody>
@@ -100,10 +100,10 @@ const Student = () => {
                     <div className="flex-1">
                       <div className="text-sm font-bold text-brand-teal mb-1">{event.date}</div>
                       <h4 className="text-gray-800 font-medium leading-tight">{event.title}</h4>
-                      <span className="inline-block mt-2 px-2 py-0.5 text-xs rounded bg-gray-100 text-gray-600">{event.type}</span>
+                      <span className="inline-block mt-2 px-2 py-0.5 text-xs rounded bg-gray-100 text-gray-800">{event.type}</span>
                     </div>
                   </div>
-                )) : <div className="text-gray-400 text-sm">No upcoming events.</div>}
+                )) : <div className="text-gray-800 text-sm">No upcoming events.</div>}
               </div>
             </div>
 
