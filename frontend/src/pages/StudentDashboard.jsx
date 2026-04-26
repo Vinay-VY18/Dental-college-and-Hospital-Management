@@ -577,7 +577,7 @@ const StudentDashboard = () => {
                   ) : (
                     <div className="space-y-4">
                       <div className="p-4 bg-amber-50 border border-amber-200 rounded-lg flex items-start gap-3">
-                        <AlertCircle className="w-6 h-6 text-amber-600 flex-shrink-0 mt-0.5" />
+                        <AlertCircle className="w-6 h-6 text-amber-600 shrink-0 mt-0.5" />
                         <div>
                           <p className="font-semibold text-amber-900">{language === 'KN' ? '??????? ????' : 'Payment Pending'}</p>
                           <p className="text-sm text-amber-700">{language === 'KN' ? `?${feePaymentData.balanceFee.toLocaleString('en-IN')} ???????????` : `?${feePaymentData.balanceFee.toLocaleString('en-IN')} is pending`}</p>
@@ -598,7 +598,7 @@ const StudentDashboard = () => {
                 {lastReceipt && (
                   <div className="border-t border-gray-200 pt-6">
                     <h4 className="text-md font-semibold text-gray-800 mb-4">{language === 'KN' ? '????? ????' : 'Last Receipt'}</h4>
-                    <div className="p-4 bg-gradient-to-br from-brand-teal/10 to-brand-blue/10 border border-brand-teal/20 rounded-lg space-y-3">
+                    <div className="p-4 bg-linear-to-br from-brand-teal/10 to-brand-blue/10 border border-brand-teal/20 rounded-lg space-y-3">
                       <div className="flex justify-between items-center">
                         <p className="text-sm text-gray-800">{language === 'KN' ? '???? ???' : 'Receipt ID'}:</p>
                         <p className="font-mono font-semibold text-gray-900">{lastReceipt.id}</p>
@@ -629,7 +629,7 @@ const StudentDashboard = () => {
             {showPaymentModal && (
               <div className="fixed inset-0 bg-white bg-opacity-80 flex items-center justify-center z-50 p-4 backdrop-blur-sm">
                 <div className="bg-white rounded-xl max-w-md w-full shadow-2xl">
-                  <div className="border-b border-gray-200 px-6 py-4 bg-gradient-to-r from-brand-teal to-brand-teal/80 text-white flex items-center justify-between">
+                  <div className="border-b border-gray-200 px-6 py-4 bg-linear-to-r from-brand-teal to-brand-teal/80 text-white flex items-center justify-between">
                     <h3 className="text-xl font-bold">{language === 'KN' ? '??????? ???????' : 'Confirm Payment'}</h3>
                     <button
                       onClick={() => setShowQRScanner(!showQRScanner)}
@@ -643,7 +643,7 @@ const StudentDashboard = () => {
                   <div className="p-6 space-y-4">
                     {/* QR Scanner Section */}
                     {showQRScanner && (
-                      <div className="p-4 bg-gradient-to-br from-purple-50 to-indigo-50 rounded-lg border-2 border-purple-200 space-y-3">
+                      <div className="p-4 bg-linear-to-br from-purple-50 to-indigo-50 rounded-lg border-2 border-purple-200 space-y-3">
                         <div className="flex items-center gap-2 mb-2">
                           <QrCode className="w-5 h-5 text-purple-600" />
                           <h4 className="font-semibold text-purple-900">{language === 'KN' ? 'QR ???? ???????? ????' : 'Scan QR Code'}</h4>
@@ -685,7 +685,7 @@ const StudentDashboard = () => {
 
                     {/* Security Notice */}
                     <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 flex gap-2">
-                      <CheckCircle className="w-4 h-4 text-blue-600 flex-shrink-0 mt-0.5" />
+                      <CheckCircle className="w-4 h-4 text-blue-600 shrink-0 mt-0.5" />
                       <p className="text-xs text-blue-700">{language === 'KN' ? '???????? ??????? ????? - ????? ???????? ??????' : 'Secured by Razorpay - Your details are protected'}</p>
                     </div>
 
@@ -720,7 +720,7 @@ const StudentDashboard = () => {
             {showReceiptModal && lastReceipt && (
               <div className="fixed inset-0 bg-white bg-opacity-80 flex items-center justify-center z-50 p-4 backdrop-blur-sm">
                 <div className="bg-white rounded-xl max-w-md w-full shadow-2xl">
-                  <div className="border-b border-gray-200 px-6 py-4 bg-gradient-to-r from-green-600 to-green-500 text-white">
+                  <div className="border-b border-gray-200 px-6 py-4 bg-linear-to-r from-green-600 to-green-500 text-white">
                     <h3 className="text-xl font-bold flex items-center gap-2">
                       <CheckCircle className="w-6 h-6" />
                       {language === 'KN' ? '??????? ??????' : 'Payment Successful'}
