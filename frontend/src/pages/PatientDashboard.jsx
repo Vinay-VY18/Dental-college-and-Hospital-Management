@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import axios from 'axios';
 import { Link, useNavigate } from 'react-router-dom';
 import { CalendarDays, Clock3, FileText, UserRound, RefreshCw, Bell } from 'lucide-react';
@@ -27,6 +27,9 @@ const PatientDashboard = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [pushStatus, setPushStatus] = useState('request'); // request, granted, denied
+  const [showAlertPrompt, setShowAlertPrompt] = useState(false);
+  const [showTestPingMessage, setShowTestPingMessage] = useState(false);
+  const lastQueueAlertRef = useRef(new Set());
 
   function urlBase64ToUint8Array(base64String) {
     const padding = '='.repeat((4 - base64String.length % 4) % 4);
@@ -44,9 +47,6 @@ const PatientDashboard = () => {
   }
 
   const enableNotifications = async () => {
-    const shouldProceed = window.confirm("Allow RRDCH to notify you when your turn is near?");
-    if (!shouldProceed) return;
-
     if (!('serviceWorker' in navigator) || !('PushManager' in window)) {
       alert("Push notifications are not supported by your browser.");
       return;
@@ -90,6 +90,17 @@ const PatientDashboard = () => {
       console.error("Failed to enable push notifications", err);
       alert(`Error enabling notifications: ${err.message || 'Unknown error'}. Check the developer console for more info.`);
     }
+  };
+
+  const handleGetAlertClick = () => {
+    if (pushStatus === 'granted') {
+      axios.post('http://localhost:5000/api/notifications/test', {}, authConfig)
+        .then(() => setShowTestPingMessage(true))
+        .catch(e => alert('Test failed:' + e.message));
+      return;
+    }
+
+    setShowAlertPrompt(true);
   };
 
   const token = sessionStorage.getItem('patientToken');
@@ -142,19 +153,91 @@ const PatientDashboard = () => {
 
   useEffect(() => {
     if (!currentAppointments || currentAppointments.length === 0) return;
+
+    // Check live status immediately when dashboard loads
+    const checkInitialAlerts = async () => {
+      try {
+        for (const appt of currentAppointments) {
+          if (appt.status === 'Pending' && appt.tokenNumber) {
+            const res = await axios.get(`http://localhost:5000/api/patients/live-status/${encodeURIComponent(appt.department)}`);
+            if (res.data.success && res.data.currentToken !== '---') {
+              const curVal = Number(res.data.currentToken);
+              if (!isNaN(curVal)) {
+                const alertKey = `${appt._id}:${curVal}`;
+                if (lastQueueAlertRef.current.has(alertKey)) continue;
+
+                let shouldAlert = false;
+                if (appt.tokenNumber === curVal + 2) {
+                   shouldAlert = true;
+                   showAlert(
+                     'Queue Alert',
+                     `Your turn is soon! You are Token #${appt.tokenNumber}. Current token is ${curVal}. Please proceed to the ${appt.department} department.`
+                   );
+                } else if (appt.tokenNumber === curVal + 1) {
+                   shouldAlert = true;
+                   showAlert(
+                     'Queue Alert',
+                     `You are NEXT! You are Token #${appt.tokenNumber}. Please wait near the doctor's cabin in the ${appt.department} department.`
+                   );
+                } else if (appt.tokenNumber === curVal) {
+                   shouldAlert = true;
+                   showAlert(
+                     'Queue Alert',
+                     `It is your turn! Token #${appt.tokenNumber}. Head inside the ${appt.department} department now!`
+                   );
+                }
+                if (shouldAlert) {
+                  lastQueueAlertRef.current.add(alertKey);
+                }
+              }
+            }
+          }
+        }
+      } catch (err) {
+        console.error('Error fetching initial live queue status for alerts', err);
+      }
+    };
     
-    const socket = io('http://localhost:5000');
+    checkInitialAlerts();
+
+    const socket = io('http://localhost:5000', {
+      reconnection: true,
+      reconnectionDelay: 1000,
+      reconnectionDelayMax: 5000,
+      reconnectionAttempts: 5,
+      transports: ['websocket', 'polling']
+    });
+
     socket.on('queueUpdate', (data) => {
       currentAppointments.forEach(appt => {
         if (appt.department === data.department && appt.status === 'Pending' && appt.tokenNumber) {
           const curVal = Number(data.currentToken);
           if (!isNaN(curVal)) {
+            const alertKey = `${appt._id}:${curVal}`;
+            if (lastQueueAlertRef.current.has(alertKey)) return;
+
+            let shouldAlert = false;
             if (appt.tokenNumber === curVal + 2) {
-               showAlert("Queue Alert", `Your turn is soon! You are Token #${appt.tokenNumber}. Current token is ${curVal}. Please proceed to the ${data.department} department.`);
+               shouldAlert = true;
+               showAlert(
+                 'Queue Alert',
+                 `Your turn is soon! You are Token #${appt.tokenNumber}. Current token is ${curVal}. Please proceed to the ${data.department} department.`
+               );
             } else if (appt.tokenNumber === curVal + 1) {
-               showAlert("Queue Alert", `You are NEXT! You are Token #${appt.tokenNumber}. Please wait near the doctor's cabin in the ${data.department} department.`);
+               shouldAlert = true;
+               showAlert(
+                 'Queue Alert',
+                 `You are NEXT! You are Token #${appt.tokenNumber}. Please wait near the doctor's cabin in the ${data.department} department.`
+               );
             } else if (appt.tokenNumber === curVal) {
-               showAlert("Queue Alert", `It is Your Turn! Token #${appt.tokenNumber}. Head inside the ${data.department} department now!`);
+               shouldAlert = true;
+               showAlert(
+                 'Queue Alert',
+                 `It is your turn! Token #${appt.tokenNumber}. Head inside the ${data.department} department now!`
+               );
+            }
+            if (shouldAlert) {
+              lastQueueAlertRef.current.add(alertKey);
             }
           }
         }
@@ -170,6 +253,41 @@ const PatientDashboard = () => {
         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 mb-8">
           <div>
             <h1 className="text-3xl font-bold text-brand-blue">{t.PATIENT_DASHBOARD}</h1>
+
+        {showTestPingMessage && (
+          <div className="fixed inset-0 z-[9999] bg-black/60 backdrop-blur-sm flex items-center justify-center px-4">
+            <div className="w-full max-w-md rounded-[1.75rem] bg-white shadow-2xl border border-gray-100 overflow-hidden">
+              <div className="bg-brand-blue px-6 py-5 text-white">
+                <div className="flex items-center gap-3">
+                  <div className="h-12 w-12 rounded-full bg-white/15 flex items-center justify-center shrink-0">
+                    <Bell className="h-6 w-6 text-white" />
+                  </div>
+                  <div>
+                    <h3 className="text-2xl font-bold">Notification Sent</h3>
+                    <p className="text-sm text-white/80 mt-1">Your test alert was delivered successfully</p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="px-6 py-6">
+                <div className="rounded-2xl bg-brand-light border border-brand-teal/20 p-4">
+                  <p className="text-gray-700 leading-relaxed">
+                    Success! Check your screen, a test notification was just sent.
+                  </p>
+                </div>
+
+                <button
+                  type="button"
+                  onClick={() => setShowTestPingMessage(false)}
+                  className="mt-6 w-full rounded-xl bg-brand-blue px-4 py-3 font-semibold text-white shadow-lg shadow-brand-blue/20 hover:bg-opacity-90 transition-colors"
+                >
+                  OK
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
             <p className="text-gray-800 mt-1">{t.PATIENT_DASHBOARD_SUB}</p>
           </div>
           <div className="flex gap-3">
@@ -182,7 +300,7 @@ const PatientDashboard = () => {
               {t.REFRESH}
             </button>
             <button
-              onClick={() => pushStatus === 'granted' ? axios.post('http://localhost:5000/api/notifications/test', {}, authConfig).then(()=>alert('Test notification requested!')).catch(e=>alert('Test failed:'+e.message)) : enableNotifications()}
+              onClick={handleGetAlertClick}
               title="Enable Push Notifications"
               className={`inline-flex items-center px-4 py-2 rounded-md font-semibold text-sm transition-colors border ${pushStatus === 'granted' ? 'bg-green-50 text-green-700 border-green-200 hover:bg-green-100' : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'}`}
             >
@@ -313,6 +431,50 @@ const PatientDashboard = () => {
               {t.DASHBOARD_NOTE}
             </div>
           </>
+        )}
+
+        {showAlertPrompt && (
+          <div className="fixed inset-0 z-[9999] bg-black/60 backdrop-blur-sm flex items-center justify-center px-4">
+            <div className="w-full max-w-md rounded-[1.75rem] bg-white shadow-2xl border border-gray-100 overflow-hidden">
+              <div className="bg-brand-blue px-6 py-5 text-white">
+                <div className="flex items-center gap-3">
+                  <div className="h-12 w-12 rounded-full bg-white/15 flex items-center justify-center">
+                    <Bell className="h-6 w-6 text-white" />
+                  </div>
+                  <div>
+                    <h3 className="text-2xl font-bold">Get Alerts</h3>
+                    <p className="text-sm text-white/80 mt-1">Stay updated when your turn is near</p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="px-6 py-6">
+                <p className="text-gray-700 leading-relaxed">
+                  Allow RRDCH to send you a notification when your queue number is approaching. You can turn this off anytime from your browser settings.
+                </p>
+
+                <div className="mt-6 flex flex-col sm:flex-row gap-3">
+                  <button
+                    type="button"
+                    onClick={() => setShowAlertPrompt(false)}
+                    className="flex-1 rounded-xl border border-gray-300 bg-white px-4 py-3 font-semibold text-gray-700 hover:bg-gray-50 transition-colors"
+                  >
+                    Not now
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setShowAlertPrompt(false);
+                      enableNotifications();
+                    }}
+                    className="flex-1 rounded-xl bg-brand-blue px-4 py-3 font-semibold text-white shadow-lg shadow-brand-blue/20 hover:bg-opacity-90 transition-colors"
+                  >
+                    Allow Alerts
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
         )}
       </div>
     </div>

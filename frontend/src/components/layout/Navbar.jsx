@@ -146,18 +146,14 @@ const Navbar = () => {
             <Link to={homePath} className="flex items-center gap-3 hover:opacity-80 transition-opacity">
               <div className="h-20 w-20 rounded-full flex items-center justify-center shadow-lg overflow-hidden bg-white border-3 border-brand-teal shrink-0">
                 <img 
-                  src="/logo.png" 
-                  alt="Rajarajeshwari Dental College Logo" 
+                  src="https://media.istockphoto.com/id/1365134619/vector/dental-study-vector-logo-design-dental-university-logo-design-template.jpg?s=612x612&w=0&k=20&c=B95B2Psdlb4OU_UTgWPBt3NT1BXRISayJujNIez9-rI=" 
+                  alt="Dental College Logo" 
                   className="h-18 w-18 object-contain"
-                  onError={(e) => {
-                    e.target.src = 'https://images.unsplash.com/photo-1609207825181-52d3214556f1?auto=format&fit=crop&q=80&w=200&h=200';
-                    e.target.style.padding = '8px';
-                  }}
                 />
               </div>
               <div className="flex flex-col justify-center">
-                <span className="font-bold text-2xl text-brand-blue leading-tight tracking-normal">Rajarajeshwari</span>
-                <span className="text-sm font-semibold text-brand-teal leading-tight tracking-wide uppercase">{subTitle}</span>
+                <span className="font-bold text-2xl text-brand-blue leading-tight tracking-normal">Dental College</span>
+                <span className="text-sm font-semibold text-brand-teal leading-tight tracking-wide uppercase">&amp; Hospital</span>
               </div>
             </Link>
           </div>

@@ -11,14 +11,13 @@ const WebsiteWelcomePopup = () => {
 
   const hidePopup = useMemo(() => location.pathname.startsWith('/admin'), [location.pathname]);
 
-  // Dental related images that change every 2.5 seconds
+  // Dental related images that change every 2 seconds
   const dentalImages = [
-    'https://admissionkaro.com/wp-content/uploads/2023/02/Management-quota-admission-in-Rajarajeswari-Dental-College-and-Hospital-Bangalore.jpg',
-    'https://www.rrdch.org/rrdch/wp-content/uploads/2024/04/Rank-holders-768x363.jpg',
-    'https://www.rrdch.org/rrdch/wp-content/uploads/2015/06/VEN_0090.jpg',
-    'https://admissionkaro.com/wp-content/uploads/2023/02/Management-quota-admission-in-Rajarajeswari-Dental-College-and-Hospital-Bangalore.jpg',
-    'https://www.rrdch.org/rrdch/wp-content/uploads/2024/04/Rank-holders-768x363.jpg',
-    'https://www.rrdch.org/rrdch/wp-content/uploads/2015/06/VEN_0090.jpg',
+    'https://img.jagranjosh.com/images/2023/January/1712023/JSS-Dental-College-and-Hospital-Mysore-Campus-View-2.jpg',
+    'https://tse2.mm.bing.net/th/id/OIP.bsGmEVByLgzKbRvgujXtsQHaE6?pid=Api&P=0&h=180',
+    'https://tse4.mm.bing.net/th/id/OIP.8_jiCFmThbU-yf1S194S4wHaDq?pid=Api&P=0&h=180',
+    'https://tse3.mm.bing.net/th/id/OIP.Nguu-gJk2p1k4QrsOUcdhAHaE8?pid=Api&P=0&h=180',
+    'https://tse1.mm.bing.net/th/id/OIP.6nFp3smQ1Xja_OV-lai0xwHaE8?pid=Api&P=0&h=180'
   ];
 
   useEffect(() => {
@@ -38,7 +37,7 @@ const WebsiteWelcomePopup = () => {
     
     const interval = setInterval(() => {
       setCurrentImageIndex((prev) => (prev + 1) % dentalImages.length);
-    }, 2500);
+    }, 2000);
 
     return () => clearInterval(interval);
   }, [isOpen, dentalImages.length]);
@@ -94,7 +93,7 @@ const WebsiteWelcomePopup = () => {
         continue: 'ವೆಬ್‌ಸೈಟ್ ಮುಂದುವರಿಸಿ'
       }
     : {
-        title: 'Welcome to Rajarajeshwari Dental College and Hospital',
+        title: 'Welcome to Dental College and Hospital',
         subtitle: 'This popup gives a complete overview of the website and all major sections.',
         closeAria: 'Close welcome popup',
         hospitalSection: 'Hospital Website Section',
@@ -141,13 +140,9 @@ const WebsiteWelcomePopup = () => {
           <div className="flex items-start gap-4">
             <div className="h-20 w-20 bg-white rounded-full flex items-center justify-center shadow-lg overflow-hidden flex-shrink-0 border-3 border-brand-teal">
               <img 
-                src="/logo.png" 
-                alt="Rajarajeshwari Dental College Logo" 
+                src="https://media.istockphoto.com/id/1365134619/vector/dental-study-vector-logo-design-dental-university-logo-design-template.jpg?s=612x612&w=0&k=20&c=B95B2Psdlb4OU_UTgWPBt3NT1BXRISayJujNIez9-rI=" 
+                alt="Dental College Logo" 
                 className="h-18 w-18 object-contain"
-                onError={(e) => {
-                  e.target.src = 'https://images.unsplash.com/photo-1609207825181-52d3214556f1?auto=format&fit=crop&q=80&w=200&h=200';
-                  e.target.style.padding = '8px';
-                }}
               />
             </div>
             <div>

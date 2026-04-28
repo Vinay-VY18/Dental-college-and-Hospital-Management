@@ -75,7 +75,7 @@ const StudentDashboard = () => {
   const handleFeedbackSubmit = (e) => {
     e.preventDefault();
     // In a real app, this would send to backend
-    alert(language === 'KN' ? '??????????? ????????????' : 'Feedback submitted successfully!');
+    alert(language === 'KN' ? 'ಪ್ರತಿಕ್ರಿಯೆ ಯಶಸ್ವಿಯಾಗಿ ಸಲ್ಲಿಸಲಾಗಿದೆ' : 'Feedback submitted successfully!');
     setFeedbackForm({ teacher: '', subject: '', feedback: '', rating: 5 });
     setShowFeedbackModal(false);
   };
@@ -189,13 +189,13 @@ const StudentDashboard = () => {
           } catch (err) {
             console.error('Payment verification error:', err);
             setPaymentProcessing(false);
-            alert(language === 'KN' ? '??????? ???????? ??????????' : 'Payment verification failed: ' + err.message);
+            alert(language === 'KN' ? 'ಪಾವತಿ ಪರಿಶೀಲನೆ ವಿಫಲವಾಗಿದೆ. ದಯವಿಟ್ಟು ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ.' : 'Payment verification failed: ' + err.message);
           }
         },
         modal: {
           ondismiss: function () {
             setPaymentProcessing(false);
-            alert(language === 'KN' ? '??????? ????? ?????????' : 'Payment cancelled');
+            alert(language === 'KN' ? 'ಪಾವತಿ ರದ್ದುಪಡಿಸಲಾಗಿದೆ' : 'Payment cancelled');
           }
         }
       };
@@ -218,7 +218,7 @@ const StudentDashboard = () => {
       console.error('Payment error:', err);
       setPaymentProcessing(false);
       const errorMsg = err.response?.data?.message || err.message || 'Failed to initiate payment';
-      alert(language === 'KN' ? `??????? ????: ${errorMsg}` : `Payment failed: ${errorMsg}`);
+      alert(language === 'KN' ? `ಪಾವತಿ ಆರಂಭಿಸಲು ವಿಫಲವಾಗಿದೆ: ${errorMsg}` : `Payment failed: ${errorMsg}`);
     }
   };
 

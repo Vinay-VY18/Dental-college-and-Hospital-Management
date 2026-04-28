@@ -798,15 +798,31 @@ const bookAppointment = async (req, res) => {
 const callNextPatient = async (req, res) => {
   try {
     const { department } = req.params;
+    const requestedDate = req.body?.date;
+
+    const baseDate = requestedDate ? new Date(requestedDate) : new Date();
+    if (Number.isNaN(baseDate.getTime())) {
+      return res.status(400).json({ success: false, message: 'Invalid queue date.' });
+    }
+
+    const start = new Date(baseDate);
+    start.setHours(0, 0, 0, 0);
+    const end = new Date(start);
+    end.setDate(end.getDate() + 1);
+
+    const queueDateFilter = {
+      department,
+      date: { $gte: start, $lt: end }
+    };
 
     // 1. Finish current patient
     await Appointment.updateMany(
-      { department, status: 'In-Treatment' },
+      { ...queueDateFilter, status: 'In-Treatment' },
       { status: 'Completed' }
     );
 
     // 2. Call next pending patient
-    const nextPatient = await Appointment.findOne({ department, status: 'Pending' }).sort({ tokenNumber: 1 });
+    const nextPatient = await Appointment.findOne({ ...queueDateFilter, status: 'Pending' }).sort({ tokenNumber: 1 });
     
     if (nextPatient) {
       nextPatient.status = 'In-Treatment';
@@ -814,11 +830,6 @@ const callNextPatient = async (req, res) => {
     }
 
     // 3. Get current queue status for socket emission
-    const todayStr = new Date().toISOString().split('T')[0];
-    const start = new Date(todayStr);
-    const end = new Date(todayStr);
-    end.setDate(end.getDate() + 1);
-
     const inTreatment = await Appointment.findOne({
       department,
       date: { $gte: start, $lt: end },
@@ -837,7 +848,8 @@ const callNextPatient = async (req, res) => {
         department,
         currentToken: inTreatment ? inTreatment.tokenNumber : '---',
         waitingCount,
-        statusChange: true
+        statusChange: true,
+        queueDate: start.toISOString().split('T')[0]
       });
     }
 

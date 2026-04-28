@@ -115,7 +115,7 @@ export const translations = {
 
     // Home
     HERO_TITLE: "Excellence in Dental Education and Patient Care",
-    HERO_SUB: "Welcome to Rajarajeshwari Dental College & Hospital. Discover a world-class academic environment alongside premium patient treatments.",
+    HERO_SUB: "Welcome to Dental College & Hospital. Discover a world-class academic environment alongside premium patient treatments.",
     STATS_YEARS: "Years of Excellence",
     STATS_PATIENTS: "Happy Patients",
     STATS_DEPTS: "Specialized Departments",

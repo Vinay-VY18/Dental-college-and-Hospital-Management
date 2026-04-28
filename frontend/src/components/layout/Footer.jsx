@@ -17,18 +17,14 @@ const Footer = () => {
             <div className="flex items-center gap-4">
               <div className="h-18 w-18 bg-white rounded-full flex items-center justify-center shadow-lg overflow-hidden border-3 border-brand-teal flex-shrink-0">
                 <img 
-                  src="/logo.png" 
-                  alt="Rajarajeshwari Dental College Logo" 
+                  src="https://media.istockphoto.com/id/1365134619/vector/dental-study-vector-logo-design-dental-university-logo-design-template.jpg?s=612x612&w=0&k=20&c=B95B2Psdlb4OU_UTgWPBt3NT1BXRISayJujNIez9-rI=" 
+                  alt="Dental College Logo" 
                   className="h-16 w-16 object-contain"
-                  onError={(e) => {
-                    e.target.src = 'https://images.unsplash.com/photo-1609207825181-52d3214556f1?auto=format&fit=crop&q=80&w=200&h=200';
-                    e.target.style.padding = '8px';
-                  }}
                 />
               </div>
               <div>
-                <h3 className="font-bold text-lg leading-tight uppercase tracking-wider">Rajarajeshwari</h3>
-                <p className="text-brand-teal text-xs font-bold">{t.DENTAL_COLLEGE_HOSPITAL}</p>
+                <h3 className="font-bold text-lg leading-tight uppercase tracking-wider">Dental College</h3>
+                <p className="text-brand-teal text-xs font-bold">&amp; Hospital</p>
               </div>
             </div>
             <p className="text-sm text-brand-light opacity-80 leading-relaxed max-w-sm">

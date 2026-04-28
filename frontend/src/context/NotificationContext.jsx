@@ -1,4 +1,4 @@
-import React, { createContext, useState, useContext, useEffect, useRef } from 'react';
+import React, { createContext, useState, useContext, useEffect, useRef, useCallback } from 'react';
 import { io } from 'socket.io-client';
 import { Bell, X, Info, AlertTriangle } from 'lucide-react';
 
@@ -9,7 +9,11 @@ export const NotificationProvider = ({ children }) => {
   const [alert, setAlert] = useState(null); // High-priority modal alert
   const socketRef = useRef(null);
 
-  const addNotification = (title, message, type = 'info') => {
+  const removeNotification = useCallback((id) => {
+    setNotifications(prev => prev.filter(n => n.id !== id));
+  }, []);
+
+  const addNotification = useCallback((title, message, type = 'info') => {
     const id = Date.now();
     const newNotif = { id, title, message, type };
     setNotifications(prev => [newNotif, ...prev].slice(0, 5));
@@ -18,34 +22,18 @@ export const NotificationProvider = ({ children }) => {
     setTimeout(() => {
       removeNotification(id);
     }, 10000);
-  };
+  }, [removeNotification]);
 
-  const removeNotification = (id) => {
-    setNotifications(prev => prev.filter(n => n.id !== id));
-  };
-
-  const showAlert = (title, message) => {
+  const showAlert = useCallback((title, message) => {
     setAlert({ title, message });
-  };
+  }, []);
 
   useEffect(() => {
     // Initialize Socket.IO
-    socketRef.current = io('http://localhost:5000');
-    const socket = socketRef.current;
-
-    socket.on('queueUpdate', (data) => {
-      // Logic for patient-specific alerts
-      const profileRaw = sessionStorage.getItem('patientProfile');
-      if (!profileRaw) return;
-
-      try {
-        const patient = JSON.parse(profileRaw);
-        // We logic check if this update is relevant to the current user's appointments
-        // This is usually handled in the dashboard, but now we do it globally
-        // However, we need to know the patient's token. 
-        // For simplicity, we'll listen for a generic event or specific broadcast
-      } catch (e) {}
+    socketRef.current = io('http://localhost:5000', {
+      transports: ['websocket', 'polling']
     });
+    const socket = socketRef.current;
 
     socket.on('adminBroadcast', (data) => {
       showAlert(data.title || "Hospital Announcement", data.message);

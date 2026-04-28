@@ -140,7 +140,8 @@ const PatientPortal = () => {
         socketRef.current = io('http://localhost:5000', {
           reconnection: true,
           reconnectionDelay: 1000,
-          reconnectionAttempts: 3
+          reconnectionAttempts: 3,
+          transports: ['websocket', 'polling']
         });
       }
 

@@ -300,7 +300,11 @@ const AdminDashboard = () => {
 
   const callNext = async (dept) => {
     try {
-      await axios.patch(`http://localhost:5000/api/patients/admin/next/${encodeURIComponent(dept)}`, {}, { headers: { Authorization: `Bearer ${token}` }});
+      await axios.patch(
+        `http://localhost:5000/api/patients/admin/next/${encodeURIComponent(dept)}`,
+        { date: viewDate },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
       fetchData();
     } catch (err) {
       alert('Failed to call next patient: ' + (err.response?.data?.message || err.message));

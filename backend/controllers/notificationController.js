@@ -9,8 +9,16 @@ exports.subscribe = async (req, res) => {
     const { subscription, trackingId, department } = req.body;
     const patientId = req.patient._id || req.patient.id;
 
-    if (!subscription) {
+    if (!subscription || !subscription.endpoint) {
       return res.status(400).json({ success: false, message: 'Missing subscription object' });
+    }
+
+    // Keep only one subscription per device endpoint to avoid duplicate/wrong notifications across accounts
+    if (subscription.endpoint) {
+      await Subscription.deleteMany({
+        'subscription.endpoint': subscription.endpoint,
+        patient: { $ne: patientId }
+      });
     }
 
     // Check if subscription already exists for this patient
